@@ -7,6 +7,10 @@
 
 ## 설치
 
+```bash
+npm install @codraft/canvas
+```
+
 `@codraft/canvas`는 *shadow dom*과 *material icon*, *Vue*을 활용한 웹 컴포넌트입니다.  
 사용하기 전에 두 가지 CSS 파일을 불러와야 합니다.
 

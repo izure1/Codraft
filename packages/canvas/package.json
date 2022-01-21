@@ -1,6 +1,6 @@
 {
   "name": "@codraft/canvas",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.3",
   "main": "dist/codraft-canvas.min.js",
   "description": "Codraft canvas web component",
   "scripts": {
@@ -19,7 +19,8 @@
     "vuex": "^3.6.2"
   },
   "files": [
-    "dist/codraft-canvas.min.js"
+    "dist/codraft-canvas.min.js",
+    "types/"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",

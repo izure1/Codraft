@@ -1,6 +1,12 @@
 # Codraft/core
 
-`@codraft/canvas`로 작성한 코드를 실행하세요. 브라우저와 노드 모든 환경에서 동작합니다.
+`@codraft/canvas`로 작성한 코드를 실행하세요. 브라우저와 Node.js 모든 환경에서 동작합니다.
+
+## 설치
+
+```bash
+npm install @codraft/core
+```
 
 ## 사용법
 
