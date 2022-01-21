@@ -65,5 +65,11 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "author": {
+    "name": "izure1",
+    "email": "admin@izure.org",
+    "url": "https://izure.org"
+  },
+  "license": "MIT"
 }

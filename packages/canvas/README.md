@@ -1,24 +1,316 @@
-# codraft
+# @codraft/canvas
 
-## Project setup
-```
-npm install
-```
+자바스크립트 코드를 Gui 환경으로 작성하세요.
+작성 내용을 저장하고, 불러올 수 있습니다.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+`@codraft/core` 라이브러리를 이용해 작성한 코드를 실행하세요.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## 설치
 
-### Lints and fixes files
-```
-npm run lint
+`@codraft/canvas`는 *shadow dom*과 *material icon*, *Vue*을 활용한 웹 컴포넌트입니다.  
+사용하기 전에 두 가지 CSS 파일을 불러와야 합니다.
+
+### Load CSS (필수)
+
+```html
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Load Vue (선택)
+
+만일 페이지에서 Vue를 사용하고 있지 않다면, 별도로 불러와야 합니다.
+
+```html
+<script src="https://unpkg.com/vue"></script>
+```
+
+### With Vue Component (선택)
+
+만일 Vue Component 환경에서 사용 중이라면, Vue 파일을 불러올 필요가 없습니다.
+
+```javascript
+import CodraftCanvas from '@codraft/canvas'
+
+<template>
+  <codraft-canvas />
+</template>
+
+Vue.extend({
+  components: {
+    CodraftCanvas
+  }
+})
+```
+
+## 사용법
+
+`@codraft/canvas`는 컴포넌트와 소통하기 위한 메서드를 이벤트로 받아낼 수 있습니다.
+이벤트는 `codraft-ready`와 `codraft-change` 2가지가 준비되어 있습니다.
+
+### `codraft-ready`
+
+컴포넌트가 사용 가능한 준비 상태가 되었을 때, 최초 1번 호출됩니다. 초기화를 위해 사용할 수 있습니다.
+
+### `codraft-change`
+
+사용자가 코드의 흐름, 작성, 지우기 등, 작업을 했을 때마다 호출됩니다. 데이터에 업데이트가 있을 때 마다 저장하고 싶을 때 사용할 수 있습니다.
+
+```javascript
+// js file
+function onReady(e) {
+  const {
+    save,
+    load,
+    setEventCommands,
+    setConditionCommands,
+    setActionCommands
+  } = e.detail
+}
+
+function onChange(e) {
+  const {
+    save,
+    load,
+    setEventCommands,
+    setConditionCommands,
+    setActionCommands
+  } = e.detail
+}
+```
+
+```html
+  <!-- if using Vue component -->
+  <codraft-canvas @codraft-ready="onReady" @codraft-change="onChange" />
+
+  <!-- or not -->
+  <codraft-canvas id="codraft-canvas" />
+  <script>
+    window.addEventListener('load', () => {
+      const canvas = document.querySelector('#codraft-canvas')
+      canvas.addEventListener('codraft-ready', onReady)
+      canvas.addEventListener('codraft-change', onChange)
+    })
+  </script>
+```
+
+### 컴포넌트 함수
+
+#### save(): `Codraft.SaveFormat`
+
+작성한 코드를 저장하고 싶을 때 사용합니다. 이후 `JSON.stringify` 메서드를 이용해 문자열로 변환하여 저장할 수 있습니다.
+
+#### load(saveFormat: `Codraft.SaveFormat`): `void`
+
+저장된 코드를 컴포넌트에 불러오고 싶을 때 사용합니다. `save` 함수로 얻어낸 저장 데이터를 매개변수로 넘겨야 합니다.
+
+#### setEventCommands(commands: `Codraft.MacroCommand[]`): `void`
+
+이벤트에 사용할 명령어 포맷 목록을 컴포넌트에 등록합니다.
+
+#### setConditionCommands(commands: `Codraft.MacroCommand[]`): `void`
+
+조건에 사용할 명령어 포맷 목록을 컴포넌트에 등록합니다.
+
+#### setActionCommands(commands: `Codraft.MacroCommand[]`): `void`
+
+행동에 사용할 명령어 포맷 목록을 컴포넌트에 등록합니다.
+
+## 명령어 (Command)
+
+명령어는 자바스크립트 함수를 `Codraft`에서 사용할 수 있도록 작성한 포맷입니다.
+구조는 아래와 같습니다.
+
+```javascript
+{
+  id: string // 명령어 고유값. 절대 중복되어선 안됩니다.
+  version: string // 명령어의 버전.
+  url: string // 명령어에 대한 정보를 담고 있는 주소
+  author: string // 명령어 작성자
+  group: string // 명령어의 그룹. 사용자들에게 같은 그룹으로 모아서 보여집니다.
+  title: string // 명령어의 이름. 사용자에게 보여집니다.
+  description: string // 명령어의 설명. 이곳에 사용자가 변수를 대입하여 코딩할 수 있습니다.
+  variables: { // description 에서 사용한 변수를 이곳에 선언해야 합니다.
+    [key: string]: {
+      type: 'string'|'number'|'radio',
+      default_value: string|number,
+      items?: [ // type이 radio일 시에만 등록해야 합니다.
+        preview: string,
+        value: string|number
+      ]
+    }
+
+  },
+  fn: Fn // 실제 작동 구현
+}
+```
+
+```javascript
+// action
+const actionSample = {
+  id: 'f0b2d0d7-de5e-472a-819a-ecf53d026c85',
+  version: '1.0.0',
+  url: 'https://github.com/izure1/-codraft',
+  author: 'izure1',
+  group: '콘솔',
+  title: '콘솔에 내용을 출력합니다',
+  description: '윈도우 콘솔에 {{ input_content }} 내용을 출력합니다.',
+  variables: {
+    'input_content': {
+      type: 'string',
+      default_value: 'Hello, world!'
+    }
+  },
+  fn(data, next, stop) {
+    if (!console) {
+      const err = new Error('console 객체가 없습니다')
+      return stop(err) // 명령어 실행을 중단합니다. 등록된 다음 명령어는 작동하지 않습니다.
+    }
+    console.log(this.input_content)
+    return next(data) // 등록된 다음 명령어를 실행합니다.
+  }
+}
+
+// condition
+const conditionSample = {
+  id: '54e2479f-a51e-46e4-9996-ed4c4f393201',
+  version: '1.0.0',
+  url: 'https://github.com/izure1/-codraft',
+  author: 'izure1',
+  group: '마우스',
+  title: '클릭한 마우스 버튼을 비교합니다.',
+  description: '클릭한 마우스가 {{ which }}클릭일 경우 작동합니다.',
+  variables: {
+    'which': {
+      type: 'radio',
+      default_value: 1,
+      items: [
+        {
+          preview: '좌',
+          value: 1
+        },
+        {
+          preview: '휠',
+          value: 2
+        },
+        {
+          preview: '우',
+          value: 3
+        }
+      ]
+    }
+  },
+  fn(data, next, stop) {
+    if (data.event) {
+      const err = new Error('등록된 이벤트가 없습니다')
+      return stop(err)
+    }
+    if (!(data.event instanceof MouseEvent)) {
+      const err = new Error('이벤트가 마우스 이벤트가 아닙니다')
+      return stop(err)
+    }
+
+    if (data.event.which === this.which) {
+      return next(data)
+    }
+    else {
+      return stop()
+    }
+  }
+}
+
+// event
+const eventSample = {
+  id: 'fe69bf12-99f3-41b4-9285-8b6ad3d4913b',
+  version: '1.0.0',
+  url: 'https://github.com/izure1/-codraft',
+  author: 'izure1',
+  group: '마우스',
+  title: '마우스를 클릭했을 때',
+  description: '마우스를 클릭했을 때 작동합니다',
+  variables: {},
+  fn(data, next, stop) {
+    if (!document) {
+      const err = new Error('dom 오브젝트가 없습니다')
+      return stop(err)
+    }
+    document.addEventListener('mousedown', (e) => {
+      data.event = e // 이벤트 정보를 할당합니다.
+      return next(data)
+    })
+  }
+}
+```
+
+이렇게 생성한 명령어는 이후 `setEventCommands`, `setConditionCommands`, `setActionCommands` 함수로 컴포넌트에 등록할 수 있습니다.
+
+```javascript
+function onReady(e) {
+  const {
+    setEventCommands,
+    setConditionCommands,
+    setActionCommands
+  } = e.detail
+
+  setEventCommands([eventSample])
+  setConditionCommands([conditionSample])
+  setActionCommands([actionSample])
+}
+```
+
+## 작업 관리
+
+### 저장하기
+
+코드를 작성하고 저장이 필요하다면 `save` 함수를 이용하세요.
+
+```javascript
+function onChange(e) {
+  const { save } = e.detail
+  
+  const rawData = save()
+  const data = JSON.stringify(rawData) // object를 string으로 형변환합니다.
+
+  localStorage.setItem('codraft-save', data) // 형변환된 저장 데이터는 localStorage에 저장합니다.
+}
+```
+
+### 불러오기
+
+코드를 불러오고 싶다면 `load` 함수를 이용하세요.
+
+```javascript
+function onReady(e) {
+  const { load } = e.detail
+
+  const rawData = localStorage.getItem('codraft-save')
+  if (rawData) {
+    // 저장된 데이터가 있다면 불러옵니다.
+    const saveData = JSON.parse(rawData)
+    load(saveData)
+  }
+}
+```
+
+## 실행
+
+저장된 데이터를 직접 자바스크립트로 실행하고 싶다면, `@codraft/core` 패키지를 사용하십시오.
+
+```javascript
+import { Runner } from '@codraft/core'
+
+const rawData = localStorage.getItem('codraft-save')
+if (rawData) {
+  const saveData = JSON.parse(rawData)
+
+  // 사용했던 모든 명령어를 runner 인스턴스에 등록해야 합니다.
+  const events = [eventSample]
+  const conditions = [conditionSample]
+  const actions = [actionSample]
+
+  const runner = new Runner(events, conditions, actions, saveData)
+
+  // runner 인스턴스를 실행합니다.
+  runner.init()
+}
+```
