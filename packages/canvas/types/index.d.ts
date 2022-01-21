@@ -1,4 +1,1 @@
-declare module '@codraft/canvas' {
-  const _: any
-  export default _
-}
+export default class CodraftCanvas {}

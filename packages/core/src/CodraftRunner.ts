@@ -1,3 +1,5 @@
+import { Codraft, MacroDataTransfer, SupportedVariableType } from '@typings/codraft'
+
 export class CodraftRunner {
   private __events: Codraft.MacroCommand[]
   private __conditions: Codraft.MacroCommand[]

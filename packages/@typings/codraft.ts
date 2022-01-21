@@ -1,48 +1,49 @@
 /* eslint-disable no-unused-vars */
-type VariableItem<T> = {
+export declare type VariableItem<T> = {
   preview: string
   value: T
 }
-type SupportedVariableType = string|number|boolean
-interface RawVariable {
+export declare type SupportedVariableType = string|number|boolean
+export declare interface RawVariable {
   type: 'string'|'number'|'radio',
   default_value: SupportedVariableType
 }
-interface StringVariable extends RawVariable {
+export declare interface StringVariable extends RawVariable {
   type: 'string'
   default_value: string
 }
-interface NumberVariable extends RawVariable {
+export declare interface NumberVariable extends RawVariable {
   type: 'number'
   default_value: number
 }
-interface AdvancedVariable<T extends SupportedVariableType> extends RawVariable {
+export declare interface AdvancedVariable<T extends SupportedVariableType> extends RawVariable {
   type: 'radio'
   default_value: T
   items: VariableItem<T>[]
 }
-interface RadioVariable extends AdvancedVariable<SupportedVariableType> {
+export declare interface RadioVariable extends AdvancedVariable<SupportedVariableType> {
   type: 'radio'
   default_value: string
   items: VariableItem<string>[]
 }
 
-type MacroVariable = StringVariable|NumberVariable|RadioVariable
-type MacroDataTransfer = { event: any, local: Record<string, any>, global: any }
-type Resolve = (data: MacroDataTransfer) => void
-type Reject = (reason?: Error) => void
-type Fn = (this: Record<string, any>, data: MacroDataTransfer, next: Resolve, stop: Reject) => Resolve|Reject
-declare interface Point2 {
+export declare type MacroVariable = StringVariable|NumberVariable|RadioVariable
+export declare type MacroDataTransfer = { event: any, local: Record<string, any>, global: any }
+export declare type Resolve = (data: MacroDataTransfer) => void
+export declare type Reject = (reason?: Error) => void
+export declare type Fn = (this: Record<string, any>, data: MacroDataTransfer, next: Resolve, stop: Reject) => Resolve|Reject
+
+export declare interface Point2 {
   x: number
   y: number
 }
 
-declare interface Range {
+export declare interface Range {
   a: Point2
   b: Point2
 }
 
-declare namespace Codraft {
+export declare namespace Codraft {
   type MacroCommand = {
     id: string
     version: string

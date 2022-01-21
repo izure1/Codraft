@@ -1,12 +1,13 @@
 const path = require('path')
+const tsTransformPaths = require('@zerollup/ts-transform-paths')
 
 module.exports = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   entry: {
-    Codraft: path.resolve(__dirname, '../', 'src', 'index.ts')
+    index: path.resolve(__dirname, '../', 'src', 'index.ts')
   },
   output: {
-    path: path.resolve(__dirname, '../', 'dist'),
+    path: path.resolve(__dirname, '../', 'dist', 'core', 'src'),
     filename: '[name].js',
     library: 'Codraft',
     libraryTarget: 'umd',
@@ -20,7 +21,14 @@ module.exports = {
         use: [
           {
             loader: 'ts-loader',
-            options: {}
+            options: {
+              getCustomTransformers: (program) => {
+                const transformer = tsTransformPaths(program)
+                return {
+                  afterDeclarations: [transformer.afterDeclarations]
+                }
+              }
+            }
           }
         ]
       }
@@ -30,6 +38,7 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, '../', 'src'),
+      '@typings': path.resolve(__dirname, '../', '../', '@typings')
     },
     modules: [
       path.resolve(__dirname, '../', 'node_modules'),

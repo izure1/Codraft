@@ -1,15 +1,15 @@
 {
   "name": "@codraft/core",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Codraft parser",
-  "main": "dist/Codraft.js",
+  "main": "dist/core/src/index.js",
   "scripts": {
     "build": "npx webpack build --config ./build/webpack.config.js",
     "serve": "npx webpack serve --config ./build/webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "files": [
-    "dist/Codraft.js"
+    "dist/"
   ],
   "author": {
     "email": "admin@izure.org",
