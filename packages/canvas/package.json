@@ -1,7 +1,7 @@
 {
   "name": "@codraft/canvas",
-  "version": "1.0.0-alpha.0",
-  "main": "dist/codraft-canvas.js",
+  "version": "1.0.0",
+  "main": "dist/codraft-canvas.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target wc --inline-vue --name codraft-canvas",
@@ -17,6 +17,9 @@
     "vuetify": "^2.4.0",
     "vuex": "^3.6.2"
   },
+  "files": [
+    "dist/codraft-canvas.min.js"
+  ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",

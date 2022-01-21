@@ -20,6 +20,7 @@ function useWheelControl() {
 
   const zoom = computed(() => state.draggable.zoom)
   const wheel = (e: WheelEvent) => {
+    e.preventDefault()
     let zoom = state.draggable.zoom
     const isWheelDown = e.deltaY > 0
     const scalar = 0.1

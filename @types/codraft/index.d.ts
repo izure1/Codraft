@@ -32,6 +32,15 @@ type MacroDataTransfer = { event: any, local: Record<string, any>, global: any }
 type Resolve = (data: MacroDataTransfer) => void
 type Reject = (reason?: Error) => void
 type Fn = (this: Record<string, any>, data: MacroDataTransfer, next: Resolve, stop: Reject) => Resolve|Reject
+declare interface Point2 {
+  x: number
+  y: number
+}
+
+declare interface Range {
+  a: Point2
+  b: Point2
+}
 
 declare namespace Codraft {
   type MacroCommand = {

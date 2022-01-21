@@ -1,6 +1,6 @@
 {
   "name": "@codraft/core",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "",
   "main": "dist/Codraft.js",
   "scripts": {
@@ -8,6 +8,9 @@
     "serve": "npx webpack serve --config ./build/webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist/Codraft.js"
+  ],
   "author": "izure1",
   "license": "MIT"
 }

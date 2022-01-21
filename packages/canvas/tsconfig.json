@@ -20,7 +20,8 @@
     "types": [
       "webpack-env",
       "vuetify",
-      "codraft"
+      "codraft",
+      "vue-dragscroll"
     ],
     "paths": {
       "@/*": [
