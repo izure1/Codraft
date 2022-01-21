@@ -1,7 +1,7 @@
 {
   "name": "@codraft/core",
   "version": "1.0.0-alpha.1",
-  "description": "Codraft runner.",
+  "description": "Codraft parser",
   "main": "dist/Codraft.js",
   "scripts": {
     "build": "npx webpack build --config ./build/webpack.config.js",
