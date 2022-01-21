@@ -1,7 +1,7 @@
 {
   "name": "@codraft/core",
   "version": "1.0.0-alpha.1",
-  "description": "",
+  "description": "Codraft runner.",
   "main": "dist/Codraft.js",
   "scripts": {
     "build": "npx webpack build --config ./build/webpack.config.js",
@@ -11,6 +11,10 @@
   "files": [
     "dist/Codraft.js"
   ],
-  "author": "izure1",
+  "author": {
+    "email": "admin@izure.org",
+    "name": "izure1",
+    "url": "https://izure.org"
+  },
   "license": "MIT"
 }

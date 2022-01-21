@@ -2,6 +2,7 @@
   "name": "@codraft/canvas",
   "version": "1.0.0",
   "main": "dist/codraft-canvas.min.js",
+  "description": "Codraft canvas web component",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target wc --inline-vue --name codraft-canvas",
