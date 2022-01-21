@@ -1,0 +1,21 @@
+{
+  "name": "codraft",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "delay-call": "^1.0.4",
+    "jsplumb": "^2.15.6",
+    "nanoid": "^3.1.30",
+    "node-relation": "^3.3.1"
+  },
+  "version": "1.0.0",
+  "description": "",
+  "author": "izure1",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.3"
+  }
+}

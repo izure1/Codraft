@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+  </head>
+  <body>
+    <script src="/dist/Codraft.js"></script>
+    <script>
+      const events = [
+        {
+          id: 'event-1',
+          version: '1.0.0',
+          url: 'https://izure.org',
+          author: 'izure',
+          group: 'click',
+          title: '클릭했을 때',
+          description: '화면을 {{ which }}클릭 했을 때 작동합니다.',
+          variables: {
+            'which': {
+              type: 'radio',
+              default_value: 0,
+              items: [
+                {
+                  preview: '좌',
+                  value: 1
+                },
+                {
+                  preview: '우',
+                  value: 2
+                }
+              ]
+            }
+          },
+          fn(data, next, stop) {
+            document.addEventListener('mousedown', (e) => {
+              if (e.which === this.which) {
+                data.event = e
+                next(data)
+              }
+            })
+          }
+        }
+      ]
+      const conditions = [
+        {
+          id: 'condition-1',
+          version: '1.0.0',
+          url: 'https://izure.org',
+          author: 'izure',
+          group: 'click',
+          title: '클릭의 위치가 특정 위치일 때',
+          description: '클릭이 {{ which }}클릭일 때 작동합니다.',
+          variables: {
+            'which': {
+              type: 'radio',
+              default_value: 0,
+              items: [
+                {
+                  preview: '좌',
+                  value: 1
+                },
+                {
+                  preview: '우',
+                  value: 2
+                }
+              ]
+            }
+          },
+          fn(data, next, stop) {
+            if (data.event && data.event.which === this.which) {
+              return next(data)
+            }
+            else {
+              return stop()
+            }
+          }
+        }
+      ]
+      const actions = [
+        {
+          id: 'action-1',
+          version: '1.0.0',
+          url: 'https://izure.org',
+          author: 'izure',
+          group: 'click',
+          title: '알람을 띄웁니다',
+          description: '알람 내용 {{ content }}(를)을 띄웁니다',
+          variables: {
+            'content': {
+              type: 'string',
+              default_value: 'hello, world!'
+            }
+          },
+          fn(data, next, stop) {
+            alert(this.content)
+            next(data)
+          }
+        }
+      ]
+      const saved = {
+        used_commands: {
+          'event-1': '1.0.0'
+        },
+        boxes: [
+          {
+            id: 'box-1',
+            events: [
+              {
+                id: 'event-command-1',
+                command_id: 'event-1',
+                variables: {
+                  'which': 1
+                }
+              }
+            ],
+            conditions: [],
+            actions: [
+              {
+                id: 'action-command-1',
+                command_id: 'action-1',
+                variables: {
+                  'content': 'asdfasdf'
+                }
+              }
+            ],
+            next_box_ids: ['box-2'],
+            comment: '',
+            x: 0,
+            y: 0,
+          },
+          {
+            id: 'box-2',
+            events: [
+              {
+                id: 'event-command-1',
+                command_id: 'event-1',
+                variables: {
+                  'which': 2
+                }
+              }
+            ],
+            conditions: [
+              {
+                id: 'condition-command-1',
+                command_id: 'condition-1',
+                variables: {
+                  'which': 2
+                }
+              }
+            ],
+            actions: [
+              {
+                id: 'action-command-1',
+                command_id: 'action-1',
+                variables: {
+                  'content': 'test'
+                }
+              }
+            ],
+            next_box_ids: [],
+            comment: '',
+            x: 0,
+            y: 0,
+          }
+        ]
+      }
+
+      const { Runner } = Codraft
+      const runner = new Runner(events, conditions, actions, saved)
+
+      runner.init()
+      console.log(runner)
+    </script>
+  </body>
+</html>
