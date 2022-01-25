@@ -20,12 +20,14 @@
     "types": [
       "webpack-env",
       "vuetify",
-      "codraft",
       "vue-dragscroll"
     ],
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@typings/*": [
+        "../@typings/*"
       ]
     },
     "lib": [

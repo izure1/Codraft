@@ -1,6 +1,6 @@
 {
   "name": "@codraft/core",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Codraft parser",
   "main": "dist/core/src/index.js",
   "scripts": {

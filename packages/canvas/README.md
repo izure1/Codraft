@@ -3,7 +3,7 @@
 자바스크립트 코드를 Gui 환경으로 작성하세요.
 작성 내용을 저장하고, 불러올 수 있습니다.
 
-`@codraft/core` 라이브러리를 이용해 작성한 코드를 실행하세요.
+`@codraft/canvas`는 웹 컴포넌트를 사용하므로, IE11 이하를 지원하지 않습니다. [자세한 내용](https://github.com/vuejs/vue-web-component-wrapper#compatibility)을 참고하세요.
 
 ## 설치
 
@@ -12,40 +12,41 @@ npm install @codraft/canvas
 ```
 
 `@codraft/canvas`는 *shadow dom*과 *material icon*, *Vue*을 활용한 웹 컴포넌트입니다.  
-사용하기 전에 두 가지 CSS 파일을 불러와야 합니다.
+사용하기 위해서 CSS 파일과 라이브러리를 불러와야 합니다.
 
-### Load CSS (필수)
+### *Load CSS (필수)*
 
 ```html
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
 ```
 
-### Load Vue (선택)
+### *Load Library (필수)*
+```html
+<script src="@codraft/canvas/dist/codraft-canvas.min.js"></script>
+```
 
-만일 페이지에서 Vue를 사용하고 있지 않다면, 별도로 불러와야 합니다.
+### *Load Vue (선택)*
+
+`@codraft/canvas` 라이브러리는 *Vue2.x* 라이브러리에 의존하여 작동합니다. 따라서 만일 페이지에서 Vue를 사용하고 있지 않다면, 추가로 불러와야 합니다.
 
 ```html
 <script src="https://unpkg.com/vue"></script>
 ```
 
-### With Vue Component (선택)
+### *With Vue Component (선택)*
 
-만일 Vue Component 환경에서 사용 중이라면, Vue 파일을 불러올 필요가 없습니다.
+만일 Vue Component 환경에서 사용 중이라면, 별도의 Vue 파일을 불러올 필요가 없습니다.
 
 ```javascript
-import CodraftCanvas from '@codraft/canvas'
+import '@codraft/canvas'
 
 <template>
   <codraft-canvas />
 </template>
-
-Vue.extend({
-  components: {
-    CodraftCanvas
-  }
-})
 ```
+
+---
 
 ## 사용법
 

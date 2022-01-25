@@ -33,6 +33,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft } from '@typings/codraft'
+
 import { computed, defineComponent, getCurrentInstance } from '@vue/composition-api'
 
 import { useCommand, useHashMap } from '@/components/common'

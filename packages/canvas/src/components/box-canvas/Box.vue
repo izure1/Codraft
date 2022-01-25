@@ -56,6 +56,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft } from '@typings/codraft'
+
 import { defineComponent, ref } from '@vue/composition-api'
 
 import { useComponentUtils } from '@/components/common'

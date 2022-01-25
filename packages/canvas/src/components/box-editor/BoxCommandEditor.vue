@@ -43,6 +43,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft, SupportedVariableType } from '@typings/codraft'
+
 import { computed, defineComponent, getCurrentInstance, ref, watch } from '@vue/composition-api'
 
 import { useAdvancedArray, useAdvancedObject, useCommand, useElement, useComponentUtils } from '@/components/common'

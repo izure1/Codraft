@@ -1,12 +1,12 @@
 {
   "name": "@codraft/canvas",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "main": "dist/codraft-canvas.min.js",
   "types": "types/index.d.ts",
   "description": "Codraft canvas web component",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc --inline-vue --name codraft-canvas",
+    "build": "vue-cli-service build --inline-vue --target wc --name codraft-canvas",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

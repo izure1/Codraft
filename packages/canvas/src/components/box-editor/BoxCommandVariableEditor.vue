@@ -67,6 +67,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft, SupportedVariableType } from '@typings/codraft'
+
 import { computed, defineComponent, ref, watch } from '@vue/composition-api'
 
 export default defineComponent({

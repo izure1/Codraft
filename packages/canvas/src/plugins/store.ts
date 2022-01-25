@@ -1,3 +1,5 @@
+import { Codraft, Point2 } from '@typings/codraft'
+
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { addFromID, getItemFromID, removeFromID } from '@/utils/advancedArray'

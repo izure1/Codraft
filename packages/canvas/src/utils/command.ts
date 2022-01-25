@@ -1,3 +1,5 @@
+import { AdvancedVariable, Codraft, SupportedVariableType } from '@typings/codraft'
+
 import { nanoid } from 'nanoid'
 import { deepCopy } from './advancedObject'
 

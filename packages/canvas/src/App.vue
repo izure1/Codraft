@@ -3,6 +3,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft } from '@typings/codraft'
+
 import Vue from 'vue'
 import { onMounted, watch } from '@vue/composition-api'
 import { DelayCall } from 'delay-call'

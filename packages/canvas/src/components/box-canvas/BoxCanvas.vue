@@ -1,70 +1,75 @@
 <template>
   <div class="box-canvas-wrapper">
     <draggable-field>
-      <div
-        v-dragscroll:nochilddrag
-        ref="canvas"
-        class="box-canvas"
-        @contextmenu.prevent="
-          if (isConnectionMode) {
-            connectionStartBox = [];
-            return;
-          }
-          addBox(...arguments);
-        "
-        @mousemove="
-          connectionOffset.x = $event.x / $store.state.draggable.zoom;
-          connectionOffset.y = $event.y / $store.state.draggable.zoom;
-        "
-      >
-        <draggable
-          v-for="box in boxes"
-          :key="`box-${box.id}`"
-          :init_left="box.x"
-          :init_top="box.y"
-          :grid="20"
-          @dragging="updateConnectionDrawing"
-          @drag-end="updateBoxPosition($event, box)"
-        >
-          <template v-slot:activator="{ on }">
-            <div
-              v-on="on"
-              @dblclick="selectedBox = box"
-              @click="
-                if (isConnectionMode && !has(connectionStartBox, box)) {
-                  connectionStartBox.forEach((source) => connectTo(source, box));
-                  connectionStartBox = [];
-                  connectionEndBox = [];
-                }
-              "
-              @mouseenter="connectionEndBox = [box]"
-              @mouseleave="connectionEndBox = []"
-            >
-              <box
-                :id="getPlumbBoxID(plumbID, box.id)"
-                :box="box"
-                :class="{
-                  'box-connectionable': (isConnectionMode && !has(connectionStartBox, box) && has(connectionEndBox, box)),
-                  'box-connectionunable': (isConnectionMode && has(connectionStartBox, box) && has(connectionEndBox, box))
-                }"
-                @connection-start="connectionStartBox = [...arguments]"
-                @copy-box="addCopyBox"
-                @delete-box="deleteBox"
-              />
-            </div>
-          </template>
-        </draggable>
-
+      <drag-scroll class="dragscroll">
         <div
-          ref="cursor"
-          :id="connectionCursorID"
-          :style="{
-            left: `${connectionOffset.x}px`,
-            top: `${connectionOffset.y}px`
-          }"
-          class="box-connection-preview"
-        />
-      </div>
+          ref="canvas"
+          class="box-canvas"
+          @contextmenu.prevent="
+            if (isConnectionMode) {
+              connectionStartBox = [];
+              return;
+            }
+            addBox(...arguments);
+          "
+          @mousemove="
+            (e) => {
+              const { x, y } = updateConnectionOffset(canvas, e, $store.state.draggable.zoom);
+              connectionOffset.x = x;
+              connectionOffset.y = y;
+            }
+          "
+        >
+          <draggable
+            v-for="box in boxes"
+            :key="`box-${box.id}`"
+            :init_left="box.x"
+            :init_top="box.y"
+            :grid="20"
+            data-nodragscroll
+            @dragging="updateConnectionDrawing"
+            @drag-end="updateBoxPosition($event, box)"
+          >
+            <template v-slot:activator="{ on }">
+              <div
+                v-on="on"
+                @dblclick="selectedBox = box"
+                @click="
+                  if (isConnectionMode && !has(connectionStartBox, box)) {
+                    connectionStartBox.forEach((source) => connectTo(source, box));
+                    connectionStartBox = [];
+                    connectionEndBox = [];
+                  }
+                "
+                @mouseenter="connectionEndBox = [box]"
+                @mouseleave="connectionEndBox = []"
+              >
+                <box
+                  :id="getPlumbBoxID(plumbID, box.id)"
+                  :box="box"
+                  :class="{
+                    'box-connectionable': (isConnectionMode && !has(connectionStartBox, box) && has(connectionEndBox, box)),
+                    'box-connectionunable': (isConnectionMode && has(connectionStartBox, box) && has(connectionEndBox, box))
+                  }"
+                  @connection-start="connectionStartBox = [...arguments]"
+                  @copy-box="addCopyBox"
+                  @delete-box="deleteBox"
+                />
+              </div>
+            </template>
+          </draggable>
+
+          <div
+            ref="cursor"
+            :id="connectionCursorID"
+            :style="{
+              left: `${connectionOffset.x}px`,
+              top: `${connectionOffset.y}px`
+            }"
+            class="box-connection-preview"
+          />
+        </div>
+      </drag-scroll>
     </draggable-field>
 
     <v-overlay :value="isBoxEditorOpen" />
@@ -90,6 +95,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft, Point2 } from '@typings/codraft'
+
 import * as JsPlumb from '@jsplumb/browser-ui'
 import { ConnectionDetachedParams } from '@jsplumb/core'
 import { FlowchartConnector } from '@jsplumb/connector-flowchart'
@@ -98,6 +105,7 @@ import { computed, defineComponent, onMounted, reactive, ref, watch } from '@vue
 
 import { useAdvancedArray, useAdvancedObject, useBox, useElement, useComponentUtils, useStore } from '@/components/common'
 import DraggableField from '@/components/draggable/DraggableField.vue'
+import DragScroll from '@/components/dragscroll/DragScroll.vue'
 import Draggable from '@/components/draggable/Draggable.vue'
 import BoxEditor from '@/components/box-editor/BoxEditor.vue'
 import Box from './Box.vue'
@@ -167,7 +175,8 @@ function usePlumb() {
           connector: {
             type: FlowchartConnector.type,
             options: {
-              cornerRadius: 3
+              cornerRadius: 3,
+              cssClass: 'pointer-events-none'
             }
           },
           endpoint: {
@@ -182,7 +191,8 @@ function usePlumb() {
               type: 'Arrow',
               options: {
                 id: 'arrow',
-                location: 1
+                cssClass: 'pointer-events-none',
+                location: 1,
               }
             }
           ]
@@ -242,7 +252,6 @@ function useConnectionPreview() {
       const source = currentQuerySelector(`#${getPlumbBoxID(plumbID, box.id)}`)
       const target = currentQuerySelector(`#${cursorElement.id}`)
       if (source === null || target === null) {
-        console.log(source, target)
         return
       }
       instance.connect({
@@ -251,15 +260,11 @@ function useConnectionPreview() {
         connector: {
           type: FlowchartConnector.type,
           options: {
-            cornerRadius: 3
-          }
-        },
-        endpoint: {
-          type: 'Blank',
-          options: {
+            cornerRadius: 3,
             cssClass: 'pointer-events-none'
           }
         },
+        endpoint: 'Blank',
         overlays: [
           {
             type: 'Arrow',
@@ -281,7 +286,26 @@ function useConnectionPreview() {
     }
   }
 
+  const updateConnectionOffset = (canvas: HTMLElement, e: MouseEvent, zoom = 1) => {
+    let { offsetX: x, offsetY: y, target } = e
+    if (target instanceof HTMLElement) {
+      if (target !== canvas) {
+        const { left: bx, top: by } = target.getBoundingClientRect()
+        const { left: cx, top: cy } = canvas.getBoundingClientRect()
+        x += ((bx - cx) * zoom)
+        y += ((by - cy) * zoom)
+      }
+      x /= zoom
+      y /= zoom
+    }
+    return {
+      x,
+      y
+    }
+  }
+
   return {
+    updateConnectionOffset,
     showPreviewConnection,
     hidePreviewConnection,
     connectTo
@@ -291,6 +315,7 @@ function useConnectionPreview() {
 export default defineComponent({
   components: {
     DraggableField,
+    DragScroll,
     Draggable,
     BoxEditor,
     Box
@@ -302,7 +327,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { showPreviewConnection, hidePreviewConnection, connectTo } = useConnectionPreview()
+    const { updateConnectionOffset, showPreviewConnection, hidePreviewConnection, connectTo } = useConnectionPreview()
     const { addBox, addCopyBox, updateBox, updateBoxPosition, deleteBox } = useBoxManager()
     const { getPlumbBoxID, initConnection, redraw } = usePlumb()
     const { rootElement } = useComponentUtils()
@@ -354,6 +379,7 @@ export default defineComponent({
       plumbID,
       connectionCursorID,
       updateConnectionDrawing,
+      updateConnectionOffset,
       getPlumbBoxID,
       addBox,
       addCopyBox,
@@ -369,12 +395,17 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.pointer-events-none {
+.pointer-events-none,
+.pointer-events-none * {
   pointer-events: none;
 }
 </style>
 
 <style lang="scss" scoped>
+.dragscroll {
+  overflow: hidden !important;
+}
+
 .box-canvas-wrapper {
   width: 100%;
   height: 100%;
@@ -383,7 +414,6 @@ export default defineComponent({
 .box-canvas {
   width: 100%;
   height: 100%;
-  overflow: hidden;
   position: relative;
 }
 

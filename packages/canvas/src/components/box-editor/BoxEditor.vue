@@ -179,6 +179,8 @@
 </template>
 
 <script lang="ts">
+import { Codraft } from '@typings/codraft'
+
 import { computed, defineComponent, ref } from '@vue/composition-api'
 
 import { useAdvancedArray, useAdvancedObject, useBox, useCommand, useHashMap, useComponentUtils, useStore } from '@/components/common'

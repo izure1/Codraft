@@ -1,11 +1,14 @@
+import { Codraft } from '@typings/codraft'
+
 import { getCurrentInstance, onMounted, ref } from '@vue/composition-api'
 import { nanoid } from 'nanoid'
 
 import { createDefaultCommandFormat, createEnsureCommandFormat, getCommandVariableKeys, getSortedCommandsByGroup, getMatchedCommand, parseCommandDescription } from '@/utils/command'
 import { add, has, remove, addFromID, removeFromID, getItemFromID, hasItemFromID } from '@/utils/advancedArray'
+import { isElement, isTextNode } from '@/utils/element'
 import { deepCopy } from '@/utils/advancedObject'
 import { createHashMap } from '@/utils/hashMap'
-import { isElement, isTextNode } from '@/utils/element'
+
 import store from '@/plugins/store'
 
 export function defineCommandLine(command: Codraft.MacroCommand): Codraft.MacroCommand {
