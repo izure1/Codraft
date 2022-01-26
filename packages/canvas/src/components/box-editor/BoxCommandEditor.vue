@@ -12,7 +12,7 @@
       />
     </v-card-title>
     <v-card-text>
-      <div class="description-wrapper pa-5">
+      <div class="description-wrapper">
         <box-command-description
           :save_format="returnData"
           :command="selectedCommand"
@@ -161,5 +161,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .description-wrapper {
   border: 1px solid lightgrey;
+  border-radius: 5px;
 }
 </style>

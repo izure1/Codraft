@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-5 mt-5">
     <div v-if="command && save_format">
       <span
         v-for="(item, i) in nodes"
@@ -17,6 +17,31 @@
           v-text="item.node.textContent"
         />
       </span>
+
+      <div class="mt-5 mb-2 text-right">
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+              v-on="on"
+              class="mr-1"
+              small
+            >
+              mdi-help-circle-outline
+            </v-icon>
+          </template>
+          <div class="text-caption">
+            <div>Author: <strong>{{ command.author }}</strong></div>
+            <div>Version: <strong>{{ command.version }}</strong></div>
+          </div>
+        </v-tooltip>
+        <a
+          :href="command.url"
+          class="text-caption"
+          target="_blank"
+        >
+          {{ command.url }}
+        </a>
+      </div>
 
       <v-overlay :value="isInputOpen" />
       <v-dialog
@@ -39,7 +64,12 @@
         />
       </v-dialog>
     </div>
-    <div v-else>상단에서 원하는 커맨드를 선택하세요.</div>
+    <div
+      v-else
+      class="mb-5"
+    >
+      상단에서 원하는 커맨드를 선택하세요.
+    </div>
   </div>
 </template>
 

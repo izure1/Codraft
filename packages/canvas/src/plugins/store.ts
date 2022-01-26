@@ -18,7 +18,29 @@ export default new Vuex.Store({
       zoom: 1,
     },
     command: {
-      events: [] as Codraft.MacroCommand[],
+      events: [{
+        id: 'f0b2d0d7-de5e-472a-819a-ecf53d026c85',
+        version: '1.0.0',
+        url: 'https://github.com/izure1/Codraft',
+        author: 'izure1',
+        group: '콘솔',
+        title: '콘솔에 내용을 출력합니다',
+        description: '윈도우 콘솔에 {{ input_content }} 내용을 출력합니다.',
+        variables: {
+          'input_content': {
+            type: 'string',
+            default_value: 'Hello, world!'
+          }
+        },
+        fn(data, next, stop) {
+          if (!console) {
+            const err = new Error('console 객체가 없습니다')
+            return stop(err) // 명령어 실행을 중단합니다. 등록된 다음 명령어는 작동하지 않습니다.
+          }
+          console.log(this.input_content)
+          return next(data) // 등록된 다음 명령어를 실행합니다.
+        }
+      }] as Codraft.MacroCommand[],
       conditions: [] as Codraft.MacroCommand[],
       actions: [] as Codraft.MacroCommand[]
     },

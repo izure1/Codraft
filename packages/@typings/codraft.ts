@@ -31,7 +31,7 @@ export declare type MacroVariable = StringVariable|NumberVariable|RadioVariable
 export declare type MacroDataTransfer = { event: any, local: Record<string, any>, global: any }
 export declare type Resolve = (data: MacroDataTransfer) => void
 export declare type Reject = (reason?: Error) => void
-export declare type Fn = (this: Record<string, any>, data: MacroDataTransfer, next: Resolve, stop: Reject) => Resolve|Reject
+export declare type Fn = (this: Record<string, any>, data: MacroDataTransfer, next: Resolve, stop: Reject) => void
 
 export declare interface Point2 {
   x: number
