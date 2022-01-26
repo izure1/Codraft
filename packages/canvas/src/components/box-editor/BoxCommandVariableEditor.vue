@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-card-title class="text-body-2">값을 입력하세요</v-card-title>
-    <v-card-text>
+    <v-card-title class="grey darken-3 text-body-2 white--text">값을 입력하세요</v-card-title>
+    <v-card-text class="mt-5">
       <v-form v-if="variable">
         <div v-if="variable.type === 'string'">
           <v-textarea
@@ -49,7 +49,6 @@
       <v-btn
         elevation="0"
         width="100"
-        tile
         @click="save(variable_key, returnData)"
       >
         완료
@@ -57,7 +56,6 @@
       <v-btn
         elevation="0"
         width="100"
-        tile
         @click="close"
       >
         취소

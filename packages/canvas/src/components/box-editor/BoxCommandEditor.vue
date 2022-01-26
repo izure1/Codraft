@@ -1,17 +1,17 @@
 <template>
   <v-card min-height="500">
-    <v-card-title>
+    <v-card-title class="grey darken-3 white--text">명령어 선택</v-card-title>
+    <v-card-text>
       <v-autocomplete
         v-model="selectedCommandID"
         :no-data-text="'찾는 명령어가 없습니다'"
-        :menu-props="{ 'nudge-right': 24, 'nudge-top': -14 }"
+        :menu-props="{ 'nudge-right': 24, 'nudge-top': -74 }"
         :attach="currentElement"
         :items="commandItems"
+        class="mt-5"
         hide-overlay
         solo
       />
-    </v-card-title>
-    <v-card-text>
       <div class="description-wrapper">
         <box-command-description
           :save_format="returnData"
@@ -25,7 +25,6 @@
         :disabled="!selectedCommand"
         elevation="0"
         width="100"
-        tile
         @click="save(returnData)"
       >
         저장
@@ -33,7 +32,6 @@
       <v-btn
         elevation="0"
         width="100"
-        tile
         @click="close"
       >
         취소

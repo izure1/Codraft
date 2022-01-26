@@ -47,7 +47,7 @@
       <v-dialog
         :attach="rootElement"
         :value="isInputOpen"
-        max-width="300"
+        max-width="25%"
         hide-overlay
         persistent
       >

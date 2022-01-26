@@ -11,6 +11,7 @@
             v-for="(keys, i) in [['events', 'Event'], ['conditions', 'Conditions'], ['actions', 'Actions']]"
             :key="`stepper-step-${i}`"
             :step="i+1"
+            color="grey darken-3"
             editable
             @click="
               selectCommand(null);
@@ -79,8 +80,7 @@
                   v-if="currentCommands.length"
                   elevation="0"
                   width="100"
-                  class="my-1"
-                  tile
+                  class="mb-1"
                   @click="
                     selectCommand(null);
                     selectFormat(null);
@@ -94,7 +94,6 @@
                   elevation="0"
                   width="100"
                   class="my-1"
-                  tile
                   @click="openCommandEditor"
                 >
                   수정
@@ -104,7 +103,6 @@
                   elevation="0"
                   width="100"
                   class="my-1"
-                  tile
                   @click="
                     removeFormat(selectedFormat);
                     selectCommand(null);
@@ -137,7 +135,6 @@
             elevation="0"
             width="100"
             class="mr-1"
-            tile
             @click="save(returnData)"
           >
             저장
@@ -146,7 +143,6 @@
           <v-btn
             elevation="0"
             width="100"
-            tile
             @click="close"
           >
             닫기
@@ -159,7 +155,7 @@
     <v-dialog
       :attach="rootElement"
       :value="isCommandEditOpen"
-      max-width="800"
+      max-width="50%"
       hide-overlay
       persistent
     >
@@ -310,18 +306,32 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+*::-webkit-scrollbar {
+  width: 5px;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
 .root {
   user-select: none;
 }
 
 .box-editor-wrapper {
+  height: 35vh;
   border: 1px solid lightgrey;
+  border-radius: 4px;
   box-sizing: border-box;
   padding: 10px;
   overflow: auto;
   overflow-y: scroll;
-  min-height: 300px;
-  max-height: 800px;
 }
 
 .box-editor-comment {

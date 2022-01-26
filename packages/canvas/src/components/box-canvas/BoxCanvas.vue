@@ -76,7 +76,7 @@
     <v-dialog
       :attach="rootElement"
       :value="isBoxEditorOpen"
-      max-width="900"
+      max-width="50%"
       hide-overlay
       persistent
       data-app
