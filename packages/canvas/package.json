@@ -74,5 +74,8 @@
     "email": "admin@izure.org",
     "url": "https://izure.org"
   },
+  "repository": {
+    "url": "https://github.com/izure1/Codraft"
+  },
   "license": "MIT"
 }

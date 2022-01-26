@@ -155,7 +155,7 @@ function onChange(e) {
 const actionSample = {
   id: 'f0b2d0d7-de5e-472a-819a-ecf53d026c85',
   version: '1.0.0',
-  url: 'https://github.com/izure1/-codraft',
+  url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '콘솔',
   title: '콘솔에 내용을 출력합니다',
@@ -180,7 +180,7 @@ const actionSample = {
 const conditionSample = {
   id: '54e2479f-a51e-46e4-9996-ed4c4f393201',
   version: '1.0.0',
-  url: 'https://github.com/izure1/-codraft',
+  url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '마우스',
   title: '클릭한 마우스 버튼을 비교합니다.',
@@ -228,7 +228,7 @@ const conditionSample = {
 const eventSample = {
   id: 'fe69bf12-99f3-41b4-9285-8b6ad3d4913b',
   version: '1.0.0',
-  url: 'https://github.com/izure1/-codraft',
+  url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '마우스',
   title: '마우스를 클릭했을 때',
@@ -260,6 +260,62 @@ function onReady(e) {
   setEventCommands([eventSample])
   setConditionCommands([conditionSample])
   setActionCommands([actionSample])
+}
+```
+
+### 명령어의 `fn` 함수 매개변수
+
+명령어의 `fn` 함수는 실제 동작하는 부분입니다. `@codraft/core`에서 콜백함수로 동작합니다. 이 함수는 `data`, `next`, `stop` 3가지 매개변수를 수신받으며, 각 매개변수는 아래와 같습니다.
+
+**data**: `MacroDataTransfer`
+
+#### *event*: `any`
+
+이벤트 정보를 담을 네임스페이스입니다. 이는 condition, action 타입의 명령어에서 사용하기 위해 있습니다. 기본값은 `null`입니다.
+
+```javascript
+// event 명령어
+document.addEventListener('click', (e) => {
+  data.event = e
+  next(data)
+})
+```
+
+#### *local*: `Record<string, any>`
+
+스트림의 지역변수를 담을 네임스페이스입니다. 이 네임스페이스에 담긴 값은 다른 네임스페이스에서 공유되지 않습니다. 말 그대로 지역변수를 위한 공간이므로, 전역변수를 사용하기 위해서는 `global`을 사용해주십시오.
+
+```javascript
+const currentTime = Date.now()
+data.local.startTime = currentTime
+```
+
+#### *global*: `GlobalThis`
+
+전역변수를 담을 네임스페이스입니다. 기본값은 `@codraft/core` 라이브러리가 동작하는 환경에 따라 다릅니다. 브라우저에서 실행 중이라면, 이 값은 `window`가 될 것입니다. Node.js에서 실행 중이라면, 이 값은 `global`이 됩니다.
+
+```javascript
+const userAnswer = prompt('너의 이름은...')
+data.global.userName = userAnswer
+```
+
+**next**: (data: `MacroDataTransfer`) => `void`
+
+현재 명령어가 성공적으로 작동이 끝났을 때 사용합니다. 이 함수를 호출하면 `@codraft/core`에서 다음 명령어를 실행합니다. `data` 매개변수를 전송하면, 다음 명령어의 `fn` 함수에서 `data` 매개변수를 수신할 수 있습니다.
+
+```javascript
+if (ok) {
+  return next(data)
+}
+```
+
+**stop**: (reason?: `Error`) => `void`
+
+현재 명령어에서 오류가 발생하였거나, 이후의 명령어의 작동을 중지해야할 때 사용합니다. 이 함수를 호출하면 `@codraft/core`에서 다음 명령어를 실행하지 않으며, 스트림이 중단됩니다. `reason` 매개변수를 사용하여 오류를 전송할 수 있으며, 이 메세지는 console에서 확인할 수 있습니다.
+
+```javascript
+if (hasError) {
+  return stop(new Error('Somethings wrong.'))
 }
 ```
 
