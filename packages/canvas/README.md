@@ -263,13 +263,52 @@ function onReady(e) {
 }
 ```
 
-### 명령어의 `fn` 함수 매개변수
+### 명령어의 `fn` 함수
 
-명령어의 `fn` 함수는 실제 동작하는 부분입니다. `@codraft/core`에서 콜백함수로 동작합니다. 이 함수는 `data`, `next`, `stop` 3가지 매개변수를 수신받으며, 각 매개변수는 아래와 같습니다.
+`fn`함수는 명령어의 `fn` 함수는 실제 동작하는 부분입니다. `@codraft/core`에서 콜백함수로 동작합니다.
+
+이 함수의 `this`는 명령어의 `variables`를 참조합니다. 따라서 `this`를 참조할 수 없는 [`arrow function`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Arrow_functions)으로 작성해선 안됩니다.
+
+```javascript
+...
+variables: {
+  a: {
+    type: 'number',
+    default_value: 0
+  },
+  b: {
+    type: 'string',
+    default_value: 'hello'
+  },
+  c: {
+    type: 'radio',
+    default_value: 1,
+    items: [
+      {
+        preview: 'one',
+        value: 1
+      },
+      {
+        preview: 'two',
+        value: 2
+      }
+    ]
+  }
+},
+fn(data, next, stop) {
+  console.log(this.a) // 실제 기입한 값이 들어가 있습니다.
+
+  console.log(typeof this.a) // 'number'
+  console.log(typeof this.b) // 'string'
+  console.log(typeof this.c) // 'number'
+}
+```
+
+또한 이 함수는 `data`, `next`, `stop` 매개변수를 수신받습니다. 각 매개변수는 아래와 같습니다.
 
 **data**: `MacroDataTransfer`
 
-#### *event*: `any`
+#### *data.event*: `any`
 
 이벤트 정보를 담을 네임스페이스입니다. 이는 condition, action 타입의 명령어에서 사용하기 위해 있습니다. 기본값은 `null`입니다.
 
@@ -281,7 +320,7 @@ document.addEventListener('click', (e) => {
 })
 ```
 
-#### *local*: `Record<string, any>`
+#### *data.local*: `Record<string, any>`
 
 스트림의 지역변수를 담을 네임스페이스입니다. 이 네임스페이스에 담긴 값은 다른 네임스페이스에서 공유되지 않습니다. 말 그대로 지역변수를 위한 공간이므로, 전역변수를 사용하기 위해서는 `global`을 사용해주십시오.
 
@@ -290,7 +329,7 @@ const currentTime = Date.now()
 data.local.startTime = currentTime
 ```
 
-#### *global*: `GlobalThis`
+#### *data.global*: `GlobalThis`
 
 전역변수를 담을 네임스페이스입니다. 기본값은 `@codraft/core` 라이브러리가 동작하는 환경에 따라 다릅니다. 브라우저에서 실행 중이라면, 이 값은 `window`가 될 것입니다. Node.js에서 실행 중이라면, 이 값은 `global`이 됩니다.
 
