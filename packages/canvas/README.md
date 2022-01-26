@@ -265,7 +265,7 @@ function onReady(e) {
 
 ### 명령어의 `fn` 함수
 
-`fn`함수는 명령어의 `fn` 함수는 실제 동작하는 부분입니다. `@codraft/core`에서 콜백함수로 동작합니다.
+`fn`함수는 명령어의 `fn` 함수는 실제 동작하는 부분입니다. `@codraft/core`에서 콜백함수로 작동합니다.
 
 이 함수의 `this`는 명령어의 `variables`를 참조합니다. 따라서 `this`를 참조할 수 없는 [`arrow function`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Arrow_functions)으로 작성해선 안됩니다.
 
