@@ -1,6 +1,6 @@
 {
   "name": "@codraft/canvas",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.8",
   "main": "dist/codraft-canvas.min.js",
   "types": "types/index.d.ts",
   "description": "Codraft canvas web component",

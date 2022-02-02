@@ -15,8 +15,8 @@
         </div>
         <div v-else-if="variable.type === 'number'">
           <v-text-field
-            v-model.number="returnData"
-            type="number"
+            v-model="returnData"
+            type="text"
             autofocus
             counter
             dense
@@ -30,7 +30,7 @@
               v-for="(button, i) in variable.items"
               :key="`radio-${i}`"
               :label="button.preview"
-              :value="button.value"
+              :value="JSON.stringify(button.value)"
             />
           </v-radio-group>
         </div>
@@ -69,6 +69,8 @@ import { Codraft, SupportedVariableType } from '@typings/codraft'
 
 import { computed, defineComponent, ref, watch } from '@vue/composition-api'
 
+import { useCommand } from '@/components/common'
+
 export default defineComponent({
   emits: ['resolve', 'reject'],
   props: {
@@ -81,12 +83,14 @@ export default defineComponent({
       required: true
     },
     default_value: {
-      type: [String, Number, Boolean],
+      type: String,
       default: null
     }
   },
   setup(props, { emit }) {
-    const default_value_ensured = computed(() => props.default_value ?? props.command.variables[props.variable_key].default_value)
+    const { createDefaultCommandFormat } = useCommand()
+
+    const default_value_ensured = computed(() => props.default_value ?? createDefaultCommandFormat(props.command).variables[props.variable_key])
 
     const returnData = ref<SupportedVariableType>(default_value_ensured.value)
     const variable = computed(() => props.command.variables[props.variable_key])

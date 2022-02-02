@@ -15,14 +15,47 @@ export class CodraftRunner {
     return map
   }
 
-  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, SupportedVariableType>, dataTransfer: Parameters<typeof command.fn>[0]): Promise<MacroDataTransfer> {
-    return new Promise<MacroDataTransfer>((resolve, reject) => {
-      command.fn.call(variables, dataTransfer, resolve, reject)
-    })
+  private static ParseVariables(variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): Record<string, SupportedVariableType> {
+    const clone: Record<string, SupportedVariableType> = {}
+    for (const key in variables) {
+      clone[key] = CodraftRunner.ParseVariable(variables[key], local, global)
+    }
+    return clone
   }
 
-  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, SupportedVariableType>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
-    command.fn.call(variables, dataTransfer, resolve, reject)
+  private static ParseVariable(variable: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
+    const regexp = /{{2}\s*(.*?)\s*}{2}/gmi
+    const equation = variable.replace(regexp, (_matched, key) => {
+      let raw = null
+      if (key in local) raw = local[key]
+      else if (key in global) raw = global[key]
+      if (typeof raw !== 'string') {
+        raw = JSON.stringify(raw)
+      }
+      return raw
+    })
+    
+    let result
+    try {
+      // Javascript syntax
+      result = eval(equation)
+    } catch (reason) {
+      // Raw string
+      result = equation
+    }
+    return result
+  }
+
+  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0]): Promise<MacroDataTransfer> {
+    return new Promise<MacroDataTransfer>((resolve, reject) => {
+      const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global)
+      command.fn.call(parsedVars, dataTransfer, resolve, reject)
+    })
+  }
+  
+  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
+    const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global)
+    command.fn.call(parsedVars, dataTransfer, resolve, reject)
   }
 
   private static FindBox(boxes: Codraft.MacroBox[], id: string): Codraft.MacroBox|null {

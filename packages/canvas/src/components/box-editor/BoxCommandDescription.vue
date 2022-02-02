@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts">
-import { Codraft, SupportedVariableType } from '@typings/codraft'
+import { Codraft } from '@typings/codraft'
 
 import { computed, defineComponent, onMounted, ref, watch } from '@vue/composition-api'
 
@@ -159,7 +159,7 @@ export default defineComponent({
     const openInput = (key: string) => selectedKey.value = key
     const closeInput = () => selectedKey.value = null
 
-    const save = (key: string, value: SupportedVariableType) => emit('resolve', key, value)
+    const save = (key: string, value: string) => emit('resolve', key, value)
 
     onMounted(fetchDescriptionHTML)
     watch(() => props.command, fetchDescriptionHTML)

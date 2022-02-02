@@ -3,13 +3,6 @@ import { AdvancedVariable, Codraft, SupportedVariableType } from '@typings/codra
 import { nanoid } from 'nanoid'
 import { deepCopy } from './advancedObject'
 
-export function isAdvancedType<T extends SupportedVariableType>(v: unknown): v is AdvancedVariable<T> {
-  if (typeof v === 'string' || typeof v === 'number') {
-    return false
-  }
-  return true
-}
-
 export function getMatchedCommand(commands: Codraft.MacroCommand[], commandID: string): Codraft.MacroCommand|null {
   return commands.find((command) => command.id === commandID) ?? null
 }
@@ -35,8 +28,9 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
     throw new Error(`The origin not matched command with saved format.`)
   }
 
-  const { description } = origin
+  const defaultValue = createDefaultCommandFormat(origin)
   const regexp = /{{2}\s*(.*?)\s*}{2}/gmi
+  const { description } = origin
   
   return description.replace(regexp, (_matched, key) => {
     let value: SupportedVariableType
@@ -51,7 +45,7 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
       // 저장된 값이 없다면 커맨드에 있는지 확인합니다.
       if (key in origin.variables) {
         // 있다면 지정된 기본값을 가져옵니다.
-        value = origin.variables[key].default_value
+        value = defaultValue.variables[key]
       }
       // 없다면 커맨드의 오류입니다.
       else {
@@ -65,7 +59,7 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
     if (key in origin.variables) {
       if ('items' in origin.variables[key]) {
         const variable = origin.variables[key] as AdvancedVariable<any>
-        const matched = variable.items.find((item) => value === item.value) ?? null
+        const matched = variable.items.find((item) => value === JSON.stringify(item.value)) ?? null
         if (matched === null) {
           preview = 'UNKNOWN'
           color = 'red--text'
@@ -75,7 +69,7 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
         }
       }
       else {
-        preview = value.toString()
+        preview = value
       }
     }
     // 없다면 커맨드의 오류입니다.
@@ -95,11 +89,15 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
 export function createDefaultCommandFormat(command: Codraft.MacroCommand): Codraft.MacroCommandSaveFormat {
   const id = nanoid()
   const command_id = command.id
-  const variables: Record<string, SupportedVariableType> = {}
+  const variables: Record<string, string> = {}
 
   for (const key in command.variables) {
     const { default_value } = command.variables[key]
-    variables[key] = default_value
+    let v = default_value
+    if (typeof default_value !== 'string') {
+      v = JSON.stringify(default_value)
+    }
+    variables[key] = v as string
   }
 
   return {
@@ -110,15 +108,15 @@ export function createDefaultCommandFormat(command: Codraft.MacroCommand): Codra
 }
 
 export function createEnsureCommandFormat(command: Codraft.MacroCommand, format: Codraft.MacroCommandSaveFormat|null = null): Codraft.MacroCommandSaveFormat {
+  const defaultFormat = createDefaultCommandFormat(command)
   if (format === null) {
-    return createDefaultCommandFormat(command)
+    return defaultFormat
   }
   
   const clone = deepCopy(format)
   for (const key in command.variables) {
     if (!(key in clone.variables)) {
-      const { default_value } = command.variables[key]
-      clone.variables[key] = default_value
+      clone.variables[key] = defaultFormat.variables[key]
     }
   }
 

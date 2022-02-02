@@ -23,8 +23,8 @@ export declare interface AdvancedVariable<T extends SupportedVariableType> exten
 }
 export declare interface RadioVariable extends AdvancedVariable<SupportedVariableType> {
   type: 'radio'
-  default_value: string
-  items: VariableItem<string>[]
+  default_value: SupportedVariableType
+  items: VariableItem<SupportedVariableType>[]
 }
 
 export declare type MacroVariable = StringVariable|NumberVariable|RadioVariable
@@ -61,7 +61,7 @@ export declare namespace Codraft {
   type MacroCommandSaveFormat = {
     id: string
     command_id: string
-    variables: Record<string, SupportedVariableType>
+    variables: Record<string, string>
   }
 
   type MacroBox = {

@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { Codraft, SupportedVariableType } from '@typings/codraft'
+import { Codraft } from '@typings/codraft'
 
 import { computed, defineComponent, getCurrentInstance, ref, watch } from '@vue/composition-api'
 
@@ -113,7 +113,7 @@ export default defineComponent({
       returnData.value = deepCopy(props.save_format)
     }
 
-    const modifyReturnData = (key: string, value: SupportedVariableType) => {
+    const modifyReturnData = (key: string, value: string) => {
       const v = returnData.value
       if (v !== null) {
         const clone = deepCopy(v)

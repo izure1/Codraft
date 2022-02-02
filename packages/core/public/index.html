@@ -5,7 +5,7 @@
     <title></title>
   </head>
   <body>
-    <script src="/dist/Codraft.js"></script>
+    <script src="/dist/index.js"></script>
     <script>
       const events = [
         {
@@ -36,6 +36,7 @@
             document.addEventListener('mousedown', (e) => {
               if (e.which === this.which) {
                 data.event = e
+                data.local.which = e.which
                 next(data)
               }
             })
@@ -110,7 +111,7 @@
                 id: 'event-command-1',
                 command_id: 'event-1',
                 variables: {
-                  'which': 1
+                  'which': '1'
                 }
               }
             ],
@@ -136,7 +137,7 @@
                 id: 'event-command-1',
                 command_id: 'event-1',
                 variables: {
-                  'which': 2
+                  'which': '2'
                 }
               }
             ],
@@ -145,7 +146,7 @@
                 id: 'condition-command-1',
                 command_id: 'condition-1',
                 variables: {
-                  'which': 2
+                  'which': '{{ which }}'
                 }
               }
             ],
@@ -154,7 +155,7 @@
                 id: 'action-command-1',
                 command_id: 'action-1',
                 variables: {
-                  'content': 'test'
+                  'content': '{{ which }} ** {{ which }}'
                 }
               }
             ],
