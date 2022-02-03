@@ -42,11 +42,17 @@ npm install @codraft/canvas
 import '@codraft/canvas'
 
 <template>
-  <codraft-canvas />
+  <codraft-canvas style="all:initial;" />
 </template>
 ```
 
----
+### CSS Style 오염 문제
+
+부모 요소로부터 CSS를 상속받으면, `@codraft/canvas` 엘리먼트의 CSS Style이 오염될 수 있습니다. 이를 방지하기 위해서, `codraft-canvas` 엘리먼트에 `all:initial` style를 부여하여 해결할 수 있습니다.
+
+```html
+<codraft-canvas style="all:initial;">
+```
 
 ## 사용법
 
@@ -86,10 +92,10 @@ function onChange(e) {
 
 ```html
   <!-- if using Vue component -->
-  <codraft-canvas @codraft-ready="onReady" @codraft-change="onChange" />
+  <codraft-canvas @codraft-ready="onReady" @codraft-change="onChange" style="all:initial;" />
 
   <!-- or not -->
-  <codraft-canvas id="codraft-canvas" />
+  <codraft-canvas id="codraft-canvas" style="all:initial;" />
   <script>
     window.addEventListener('load', () => {
       const canvas = document.querySelector('#codraft-canvas')
