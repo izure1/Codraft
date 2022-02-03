@@ -24,8 +24,17 @@ export class CodraftRunner {
   }
 
   private static ParseVariable(variable: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
-    const regexp = /{{2}\s*(.*?)\s*}{2}/gmi
-    const equation = variable.replace(regexp, (_matched, key) => {
+    const local_regexp = /{{2}\s*(.*?)\s*}{2}/gmi
+    const global_regexp = /{{3}\s*(.*?)\s*}{3}/gmi
+
+    const equation = variable.replace(global_regexp, (matched, key) => {
+      let raw: SupportedVariableType = matched
+      if (key in global) raw = global[key]
+      if (typeof raw !== 'string') {
+        raw = JSON.stringify(raw)
+      }
+      return raw
+    }).replace(local_regexp, (_matched, key) => {
       let raw = null
       if (key in local) raw = local[key]
       else if (key in global) raw = global[key]
