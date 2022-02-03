@@ -9,7 +9,7 @@ export default {
   variables: {
     'protocol': {
       type: 'radio',
-      default_value: 'https',
+      default_value: 'https:',
       items: [
         {
           preview: 'https',
@@ -17,7 +17,7 @@ export default {
         },
         {
           preview: 'http',
-          value: 'http'
+          value: 'http:'
         }
       ]
     }
