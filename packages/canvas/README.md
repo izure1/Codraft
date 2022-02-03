@@ -22,31 +22,12 @@ npm install @codraft/canvas
 ```
 
 ### *Load Library (필수)*
-```html
-<script src="@codraft/canvas/dist/codraft-canvas.min.js"></script>
-```
-
-### *Load Vue (선택)*
-
-`@codraft/canvas` 라이브러리는 *Vue2.x* 라이브러리에 의존하여 작동합니다. 따라서 만일 페이지에서 Vue를 사용하고 있지 않다면, 추가로 불러와야 합니다.
 
 ```html
-<script src="https://unpkg.com/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/@codraft/canvas@1.x.x/dist/codraft-canvas.min.js"></script>
 ```
 
-### *With Vue Component (선택)*
-
-만일 Vue Component 환경에서 사용 중이라면, 별도의 Vue 파일을 불러올 필요가 없습니다.
-
-```javascript
-import '@codraft/canvas'
-
-<template>
-  <codraft-canvas style="all:initial;" />
-</template>
-```
-
-### CSS Style 오염 문제
+### *CSS Style 오염 문제 (선택)*
 
 부모 요소로부터 CSS를 상속받으면, `@codraft/canvas` 엘리먼트의 CSS Style이 오염될 수 있습니다. 이를 방지하기 위해서, `codraft-canvas` 엘리먼트에 `all:initial` style를 부여하여 해결할 수 있습니다.
 

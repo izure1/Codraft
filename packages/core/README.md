@@ -27,3 +27,19 @@ const runner = new Runner(eventCommands, conditionCommands, actionCommands, save
 
 runner.init() // 코드를 실행합니다.
 ```
+
+#### Node.js
+
+```javascript
+import { Runner } from '@codraft/core'
+```
+
+#### Browser
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@codraft/core@1.x.x/dist/core/src/index.min.js"></script>
+```
+
+```javascript
+const { Runner } = Codraft
+```

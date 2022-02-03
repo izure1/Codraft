@@ -1,37 +1,15 @@
-## Welcome to GitHub Pages
+## 예제
 
-You can use the [editor on GitHub](https://github.com/izure1/Codraft/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+`Codraft`의 자세한 내용은 각 저장소의 README를 참조하십시오.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Packages
 
-### Markdown
+@codraft/canvas - [Codraft canvas web component](https://github.com/izure1/Codraft/tree/master/packages/canvas)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+@codraft/core - [Codraft parser](https://github.com/izure1/Codraft/tree/master/packages/core)
 
-```markdown
-Syntax highlighted code block
+## Sample
 
-# Header 1
-## Header 2
-### Header 3
+[코드 작성](./write.html)
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/izure1/Codraft/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+[작성 코드 실행](./run.html)

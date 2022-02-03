@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Codraft | @codraft/canvas</title>
+    <style>
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      .codraft {
+        all: initial;
+      }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@codraft/canvas@1.0.0/dist/codraft-canvas.min.js"></script>
+  </head>
+  <body>
+    <codraft-canvas class="codraft"></codraft-canvas>
+    <script>
+      const canvas = document.querySelector('.codraft')
+      
+      if (canvas instanceof HTMLElement) {
+        const onReady = (e) => {
+          const { setEventCommands, setConditionCommands, setActionCommands, load } = e.detail
+          const rawSaveData = localStorage.getItem('codraft-save')
+
+          if (rawSaveData) {
+            try {
+              const saveData = JSON.parse(rawSaveData)
+              load(saveData)
+            } catch (reason) {
+              alert(reason)
+            }
+          }
+        }
+        
+        const onChange = (e) => {
+          const { save } = e.detail
+
+          const rawSaveData = save()
+          const saveData = JSON.stringify(rawSaveData)
+
+          localStorage.setItem('codraft-save', saveData)
+        }
+
+        canvas.addEventListener('codraft-ready', onReady)
+        canvas.addEventListener('codraft-change', onChange)
+      }
+    </script>
+  </body>
+</html>
