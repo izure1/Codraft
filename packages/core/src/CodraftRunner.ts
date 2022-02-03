@@ -1,4 +1,5 @@
 import { Codraft, MacroDataTransfer, SupportedVariableType } from '@typings/codraft'
+import Mexp from 'math-expression-evaluator'
 
 export class CodraftRunner {
   private __events: Codraft.MacroCommand[]
@@ -15,7 +16,7 @@ export class CodraftRunner {
     return map
   }
 
-  private static ParseVariables(variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): Record<string, SupportedVariableType> {
+  private static ParseVariables(variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>, isDebug = false): Record<string, SupportedVariableType> {
     const clone: Record<string, SupportedVariableType> = {}
     for (const key in variables) {
       clone[key] = CodraftRunner.ParseVariable(variables[key], local, global)
@@ -23,7 +24,7 @@ export class CodraftRunner {
     return clone
   }
 
-  private static ParseVariable(variable: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
+  private static ParseVariable(variable: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>, isDebug = false): SupportedVariableType {
     const local_regexp = /{{2}\s*(.*?)\s*}{2}/gmi
     const global_regexp = /{{3}\s*(.*?)\s*}{3}/gmi
 
@@ -47,23 +48,26 @@ export class CodraftRunner {
     let result
     try {
       // Javascript syntax
-      result = eval(equation)
+      result = Mexp.eval(equation)
     } catch (reason) {
       // Raw string
       result = equation
+      if (isDebug) {
+        console.error(reason)
+      }
     }
     return result
   }
 
-  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0]): Promise<MacroDataTransfer> {
+  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], isDebug = false): Promise<MacroDataTransfer> {
     return new Promise<MacroDataTransfer>((resolve, reject) => {
-      const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global)
+      const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global, isDebug)
       command.fn.call(parsedVars, dataTransfer, resolve, reject)
     })
   }
   
-  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
-    const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global)
+  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void, isDebug = false): void {
+    const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global, isDebug)
     command.fn.call(parsedVars, dataTransfer, resolve, reject)
   }
 
@@ -86,7 +90,7 @@ export class CodraftRunner {
     const { command_id, variables } = format
     const command = this.__commandHashMap.get(command_id) ?? null
     if (command !== null) {
-      return await CodraftRunner.RunCommand(command, variables, data)
+      return await CodraftRunner.RunCommand(command, variables, data, this.__isDebug)
     }
     else {
       throw new Error(`The '${command_id}' command not exists.`)
@@ -97,7 +101,7 @@ export class CodraftRunner {
     const { command_id, variables } = format
     const command = this.__commandHashMap.get(command_id) ?? null
     if (command !== null) {
-      CodraftRunner.RunCommandAsync(command, variables, data, resolve, reject)
+      CodraftRunner.RunCommandAsync(command, variables, data, resolve, reject, this.__isDebug)
     }
     else {
       throw new Error(`The '${command_id}' command not exists.`)

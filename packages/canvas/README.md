@@ -380,24 +380,7 @@ if (hasError) {
 안녕, 내 이름은 {{ userName }}이야.
 ```
 
-만일 `userName`이 `홍길동`이었다면, 위 문장은 `안녕, 내 이름은 홍길동이야`로 치환됩니다.  
-그렇다면 변수의 형변환은 어떻게 될까요?
-
-```javascript
-{{ userName }} + 1
-```
-
-이 문장은 결론적으로 `홍길동 + 1`으로 치환됩니다. `"홍길동" + 1`이 아님에 주의하세요. 그리고 `홍길동`이라는 자바스크립트 변수가 없으므로, 이는 문법 오류를 발생시킵니다.
-
-만일 `홍길동1`이라는 결과를 얻고 싶으면, 아래처럼 할 수 있습니다.
-
-```javascript
-{{ userName }}1
-```
-
-```javascript
-"{{ userName }}" + 1
-```
+만일 `userName`이 `홍길동`이었다면, 위 문장은 `안녕, 내 이름은 홍길동이야`로 치환됩니다.
 
 ### 변수의 우선순위
 
@@ -415,19 +398,24 @@ if (hasError) {
 delete data.local.userName
 ```
 
-### 주의! 변수 템플릿은 `eval`을 사용합니다
+### 변수 템플릿은 [`math-expression-evaluator`](https://github.com/bugwheels94/math-expression-evaluator)을 사용합니다
 
-`Codraft`에서는 변수 템플릿을 해석하기 위해 자바스크립트의 `eval` 함수에 의존합니다. `eval`함수는 자바스크립트 문장을 실행합니다. 따라서 보안에 심각한 결함이 생길 수 있습니다.
-
-가령 플레이어의 이름을, `data.local.userName` 변수에 대입한다고 합시다. 이 때 사용자가 악의를 품고, 아래와 같이 `실행 가능한 자바스크립트 문법` 문자열을 삽입하면 문제가 됩니다.
+`Codraft`에서는 변수 템플릿을 해석하기 위해 `math-expression-evaluator` 라이브러리에 의존합니다. 따라서 대입값을 수학 수식으로 입력한다면 이를 해석한 결과를 내보냅니다.
 
 ```javascript
-var xml = new XMLHttpRequest()
-xml.open('GET', '...')
-...
+// 수학 수식임
+{{ test }} + 1 / 5
 ```
 
-`Codraft`에서는 이 문자열이 실행가능한 문법이기 때문에, 실행하려 할 것입니다. 이렇게 될 경우, 악의를 가진 사용자가 `XSS공격`을 하기 쉬워지며, 이러한 공격을 막기 위해서 이용자는 변수의 내용을 확인하고 방지하도록 노력해야 합니다.
+이러한 문자열은 수학 수식으로 판단되어, 계산된 결과가 보내집니다.
+
+```javascript
+// 수학 수식이 아님
+안녕 내 이름은 {{ userName }}이야.
+```
+
+하지만 위와 같은 문자열은 수학 수식이 아니므로, 문자열로 반환됩니다.
+어떠한 문자열이 수학 수식으로 판단되는지는, [`math-expression-evaluator` 공식 문서](http://bugwheels94.github.io/math-expression-evaluator/)를 참조하십시오.
 
 ## 작업 관리
 
