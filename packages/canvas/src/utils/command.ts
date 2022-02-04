@@ -1,4 +1,4 @@
-import { AdvancedVariable, Codraft, SupportedVariableType } from '@typings/codraft'
+import { AdvancedVariable, Codraft } from '@typings/codraft'
 
 import { nanoid } from 'nanoid'
 import { deepCopy } from './advancedObject'
@@ -31,9 +31,11 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
   const defaultValue = createDefaultCommandFormat(origin)
   const regexp = /{{2}\s*(.*?)\s*}{2}/gmi
   const { description } = origin
+
+  const ensureString = (v: unknown) => typeof v === 'string' ? v : JSON.stringify(v)
   
   return description.replace(regexp, (_matched, key) => {
-    let value: SupportedVariableType
+    let value = ''
     let preview = ''
     let color = className
 
@@ -59,7 +61,7 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
     if (key in origin.variables) {
       if ('items' in origin.variables[key]) {
         const variable = origin.variables[key] as AdvancedVariable<any>
-        const matched = variable.items.find((item) => value === JSON.stringify(item.value)) ?? null
+        const matched = variable.items.find((item) => value === ensureString(item.value)) ?? null
         if (matched === null) {
           preview = 'UNKNOWN'
           color = 'red--text'
@@ -74,7 +76,7 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
     }
     // 없다면 커맨드의 오류입니다.
     else {
-      value = 'UNKNOWN'
+      preview = 'UNKNOWN'
       color = 'red--text'
     }
 
