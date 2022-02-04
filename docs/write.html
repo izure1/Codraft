@@ -21,34 +21,38 @@
     <codraft-canvas class="codraft"></codraft-canvas>
     <script>
       const canvas = document.querySelector('.codraft')
-      
-      if (canvas instanceof HTMLElement) {
-        const onReady = (e) => {
-          const { setEventCommands, setConditionCommands, setActionCommands, load } = e.detail
-          const rawSaveData = localStorage.getItem('codraft-save')
+      let setEvent = null
+      let setCondition = null
+      let setAction = null
 
-          if (rawSaveData) {
-            try {
-              const saveData = JSON.parse(rawSaveData)
-              load(saveData)
-            } catch (reason) {
-              alert(reason)
-            }
+      const onReady = (e) => {
+        const { setEventCommands, setConditionCommands, setActionCommands, load } = e.detail
+        const rawSaveData = localStorage.getItem('codraft-save')
+
+        if (rawSaveData) {
+          try {
+            const saveData = JSON.parse(rawSaveData)
+            load(saveData)
+          } catch (reason) {
+            alert(reason)
           }
         }
-        
-        const onChange = (e) => {
-          const { save } = e.detail
-
-          const rawSaveData = save()
-          const saveData = JSON.stringify(rawSaveData)
-
-          localStorage.setItem('codraft-save', saveData)
-        }
-
-        canvas.addEventListener('codraft-ready', onReady)
-        canvas.addEventListener('codraft-change', onChange)
       }
+
+      const onChange = (e) => {
+        const { save } = e.detail
+
+        const rawSaveData = save()
+        const saveData = JSON.stringify(rawSaveData)
+
+        localStorage.setItem('codraft-save', saveData)
+      }
+
+      canvas.addEventListener('codraft-ready', onReady)
+      canvas.addEventListener('codraft-change', onChange)
+    </script>
+    <script type="module">
+      import { events, conditions, actions } from './js/commands.js'
     </script>
   </body>
 </html>

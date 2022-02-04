@@ -117,6 +117,16 @@ export default Vue.extend({
         detail: { ...methods }
       })
       target.dispatchEvent(event)
+      ;(target as any).codraft = {
+        save,
+        load,
+        addEventCommand,
+        addConditionCommand,
+        addActionCommand,
+        setEventCommands,
+        setConditionCommands,
+        setActionCommands
+      }
     })
 
     waitMount(() => {

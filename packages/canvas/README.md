@@ -23,6 +23,14 @@ npm install @codraft/canvas
 
 ### *Load Library (필수)*
 
+#### Node.js
+
+```javascript
+import '@codraft/canvas'
+```
+
+### Browser
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@codraft/canvas@1.x.x/dist/codraft-canvas.min.js"></script>
 ```
@@ -84,6 +92,24 @@ function onChange(e) {
       canvas.addEventListener('codraft-change', onChange)
     })
   </script>
+```
+
+하지만 `codraft-canvas` 엘리먼트로부터 직접 컴포넌트 함수를 불러올 수도 있습니다. `element.codraft` 네임스페이스를 참조하세요. 이는 이벤트를 얻어내기 어려운 환경에서 사용하기에 적합합니다.
+
+```html
+<codraft-canvas id="codraft-canvas" style="all:initial;">
+```
+
+```javascript
+const canvas = document.querySelector('#codraft-canvas')
+
+const {
+  save,
+  load,
+  setEventCommands,
+  setConditionCommands,
+  setActionCommands
+} = canvas.codraft
 ```
 
 ### 컴포넌트 함수

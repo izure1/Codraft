@@ -10,9 +10,9 @@
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@codraft/core@1.0.0/dist/core/src/index.min.js"></script>
-  </head>
-  <body>
-    <script>
+    <script type="module">
+      import { events, conditions, actions } from './js/commands.js'
+
       const { Runner } = Codraft
 
       const events = []
@@ -30,5 +30,6 @@
         }
       }
     </script>
-  </body>
+  </head>
+  <body></body>
 </html>
