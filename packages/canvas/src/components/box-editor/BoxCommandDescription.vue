@@ -9,6 +9,7 @@
           v-if="item.isVariable"
           v-text="item.node.textContent"
           class="btn-var blue--text font-weight-bold px-2 d-inline"
+          small
           text
           @click="openInput(item.key)"
         />

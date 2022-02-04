@@ -5,30 +5,44 @@
     class="box movable"
     dark
   >
-    <div class="grey darken-3 py-2">
+    <div class="grey darken-3 pt-2 pb-1">
       <v-card-title class="py-0">
-        <span class="text-subtitle-1">{{ box.comment || box.id }}</span>
-        <v-spacer />
-        <v-tooltip
-          v-for="(control, i) in controls"
-          :key="`box-control-${i}`"
-          :attach="rootElement"
-          right
-        >
-          <template v-slot:activator="{ on }">
-            <v-btn
-              v-on="on"
-              small
-              icon
-              @click="control.click($event, box)"
+        <div class="box-head d-flex">
+          <span
+            v-if="box.comment"
+            v-text="box.comment"
+            class="box-comment flex-grow-0 flex-shrink-1 text-subtitle-1"
+          />
+          <span
+            v-else
+            class="text-overline grey--text"
+          >
+            주석 없음
+          </span>
+          <v-spacer />
+          <div class="flex-shrink-0">
+            <v-tooltip
+              v-for="(control, i) in controls"
+              :key="`box-control-${i}`"
+              :attach="rootElement"
+              right
             >
-              <v-icon small>{{ control.icon }}</v-icon>
-            </v-btn>
-          </template>
-          <span class="text-caption">{{ control.description }}</span>
-        </v-tooltip>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  v-on="on"
+                  class="box-button"
+                  small
+                  icon
+                  @click="control.click($event, box)"
+                >
+                  <v-icon small>{{ control.icon }}</v-icon>
+                </v-btn>
+              </template>
+              <span class="text-caption">{{ control.description }}</span>
+            </v-tooltip>
+          </div>
+        </div>
       </v-card-title>
-      <!-- <v-card-subtitle class="pt-3 py-0 font-weight-regular text-caption grey--text">{{ box.comment }}</v-card-subtitle> -->
     </div>
 
     <div>
@@ -119,5 +133,20 @@ export default defineComponent({
 .box {
   user-select: none;
   cursor: pointer;
+
+  .box-head {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .box-button {
+    vertical-align: top;
+  }
+
+  .box-comment {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>

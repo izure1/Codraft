@@ -111,6 +111,28 @@
                 >
                   삭제
                 </v-btn>
+                <v-btn
+                  :disabled="!selectedFormat"
+                  elevation="0"
+                  width="100"
+                  class="my-1"
+                  @click="
+                    returnData = moveFormatOrder(returnData, currentCommandTab, selectedFormat, -1)
+                  "
+                >
+                  위로
+                </v-btn>
+                <v-btn
+                  :disabled="!selectedFormat"
+                  elevation="0"
+                  width="100"
+                  class="my-1"
+                  @click="
+                    returnData = moveFormatOrder(returnData, currentCommandTab, selectedFormat, 1)
+                  "
+                >
+                  아래로
+                </v-btn>
               </div>
             </div>
           </v-stepper-content>
@@ -165,7 +187,7 @@
         :commands="currentCommands"
         :command="selectedCommand"
         @resolve="
-          modifyReturnData(returnData, currentCommandTab, ...arguments);
+          returnData = ensureFormatToReturnData(returnData, currentCommandTab, ...arguments);
           closeCommandEditor();
         "
         @reject="closeCommandEditor"
@@ -194,6 +216,83 @@ function useStepper() {
   }
 }
 
+function useReturnDataModifier() {
+  const { add, hasItemFromID } = useAdvancedArray()
+  const { deepCopy } = useAdvancedObject()
+
+  const checkCommandTabExists = (box: Codraft.MacroBox, commandTab: MacroTabs) => commandTab in box
+
+  const ensureFormatToReturnData = (box: Codraft.MacroBox, commandTab: MacroTabs, format: Codraft.MacroCommandSaveFormat) => {
+    const isExistsTab = checkCommandTabExists(box, commandTab)
+    if (!isExistsTab) {
+      throw new Error(`Somethings wrong. '${commandTab}' field are incorrect tab name.`)
+    }
+
+    const clone = deepCopy(box)
+    const tab = clone[commandTab]
+
+    // insert
+    if (!hasItemFromID(tab, format.id)) {
+      clone[commandTab] = add(tab, format)
+      return clone
+    }
+    // update
+    else {
+      const index = tab.findIndex((before) => before.id === format.id)
+      if (index !== -1) {
+        clone[commandTab].splice(index, 1, format)
+        return clone
+      }
+      else {
+        throw new Error(`Somethings wrong. The command not exists what 'id' is '${format.id}'`)
+      }
+    }
+  }
+
+  const moveFormatOrder = (box: Codraft.MacroBox, commandTab: MacroTabs, format: Codraft.MacroCommandSaveFormat, index: number) => {
+    const isExistsTab = checkCommandTabExists(box, commandTab)
+    if (!isExistsTab) {
+      throw new Error(`Somethings wrong. '${commandTab}' field was incorrect tab name.`)
+    }
+
+    const clone = deepCopy(box)
+    const tab = clone[commandTab]
+
+    // non exists
+    if (!hasItemFromID(tab, format.id)) {
+      throw new Error(`Somethings wrong. '${JSON.stringify(format)}' format are non exists in '${commandTab}' tab.`)
+    }
+    
+    const prevIndex = tab.findIndex((t) => t.id === format.id)
+    // non exists format. error
+    if (prevIndex === -1) {
+      throw new Error(`Somethings wrong. '${JSON.stringify(format)}' format are non exists in '${commandTab}' tab.`)
+    }
+
+    const minIndex = 0
+    const maxIndex = tab.length - 1
+    let hopeIndex = prevIndex + index
+
+    if (hopeIndex < minIndex) {
+      hopeIndex = minIndex
+    }
+    else if (hopeIndex > maxIndex) {
+      hopeIndex = maxIndex
+    }
+
+    const before = tab[hopeIndex]
+    tab[hopeIndex] = deepCopy(format)
+    tab[prevIndex] = deepCopy(before)
+
+    return clone
+  }
+
+  return {
+    ensureFormatToReturnData,
+    moveFormatOrder
+  }
+}
+
 const { createNewBox } = useBox()
 
 export default defineComponent({
@@ -209,34 +308,12 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { state } = useStore()
-    const { add, hasItemFromID, removeFromID } = useAdvancedArray()
+    const { removeFromID } = useAdvancedArray()
     const { deepCopy } = useAdvancedObject()
     const { createHashMap } = useHashMap()
+    const { ensureFormatToReturnData, moveFormatOrder } = useReturnDataModifier()
 
     const returnData = ref<Codraft.MacroBox>(deepCopy(props.box))
-
-    const modifyReturnData = (box: Codraft.MacroBox, commandTab: MacroTabs, command: Codraft.MacroCommandSaveFormat) => {
-      const clone = deepCopy(box)
-      if (!(commandTab in box)) {
-        throw new Error(`Somethings wrong. '${commandTab}' field was incorrect tab name.`)
-      }
-      // insert
-      if (!hasItemFromID(box[commandTab], command.id)) {
-        clone[commandTab] = add(box[commandTab], command)
-        returnData.value = clone
-      }
-      // update
-      else {
-        const index = box[commandTab].findIndex((before) => before.id === command.id)
-        if (index !== -1) {
-          clone[commandTab].splice(index, 1, command)
-          returnData.value = clone
-        }
-        else {
-          throw new Error(`Somethings wrong. The command not exists what id is '${command.id}'`)
-        }
-      }
-    }
 
     const save = (data: Codraft.MacroBox) => emit('resolve', deepCopy(data))
     const close = () => emit('reject')
@@ -278,7 +355,8 @@ export default defineComponent({
     
     return {
       returnData,
-      modifyReturnData,
+      ensureFormatToReturnData,
+      moveFormatOrder,
       save,
       close,
 
