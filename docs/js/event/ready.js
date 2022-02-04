@@ -11,9 +11,9 @@ export default {
     if (typeof process === 'object') {
       return stop(new Error('브라우저 환경에서만 작동합니다.'))
     }
-    window.addEventListener('load', (e) => {
+    document.addEventListener('ready', (e) => {
       data.event = e
-      next(e)
+      next(data)
     })
   }
 }

@@ -13,7 +13,7 @@ export default {
     }
     document.addEventListener('ready', (e) => {
       data.event = e
-      next(e)
+      next(data)
     })
   }
 }

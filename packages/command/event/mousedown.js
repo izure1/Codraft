@@ -13,7 +13,7 @@ export default {
     }
     document.addEventListener('mousedown', (e) => {
       data.event = e
-      next(e)
+      next(data)
     })
   }
 }

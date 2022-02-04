@@ -9,166 +9,223 @@
     <script>
       const events = [
         {
-          id: 'event-1',
+          id: 'd6d1a1b7-7e9f-4011-b6d4-c5427c8e75fd',
           version: '1.0.0',
-          url: 'https://izure.org',
-          author: 'izure',
-          group: 'click',
-          title: '클릭했을 때',
-          description: '화면을 {{ which }}클릭 했을 때 작동합니다.',
-          variables: {
-            'which': {
-              type: 'radio',
-              default_value: 0,
-              items: [
-                {
-                  preview: '좌',
-                  value: 1
-                },
-                {
-                  preview: '우',
-                  value: 2
-                }
-              ]
+          url: 'https://github.com/izure1/Codraft',
+          author: 'izure1',
+          group: '마우스',
+          title: '좌클릭했을 때',
+          description: '좌클릭했을 때 작동합니다. 이 명령어는 브라우저에서만 작동합니다.',
+          variables: {},
+          fn: function(data, next, stop) {
+            if (typeof process === 'object') {
+              return stop(new Error('브라우저 환경에서만 작동합니다.'))
             }
-          },
-          fn(data, next, stop) {
-            document.addEventListener('mousedown', (e) => {
-              if (e.which === this.which) {
-                data.event = e
-                data.local.which = e.which
-                next(data)
-              }
+            document.addEventListener('click', (e) => {
+              data.event = e
+              next(data)
             })
           }
         }
       ]
-      const conditions = [
+
+      const conditions = []
+      const actions = [
         {
-          id: 'condition-1',
+          id: '0c1cedc1-1713-4fe9-ae7d-9aa8a27778fb',
           version: '1.0.0',
-          url: 'https://izure.org',
-          author: 'izure',
-          group: 'click',
-          title: '클릭의 위치가 특정 위치일 때',
-          description: '클릭이 {{ which }}클릭일 때 작동합니다.',
+          url: 'https://github.com/izure1/Codraft',
+          author: 'izure1',
+          group: '대화상자',
+          title: '대화상자를 띄웁니다.',
+          description: '대화상자에 내용{{ message }}(를)을 보여줍니다. 이 명령어는 브라우저에서만 작동합니다.',
           variables: {
-            'which': {
+            'message': {
+              type: 'string',
+              default_value: 'Hello, World!'
+            }
+          },
+          fn: function(data, next, stop) {
+            if (typeof process === 'object') {
+              return stop(new Error('브라우저 환경에서만 작동합니다.'))
+            }
+
+            alert(this.message)
+            next(data)
+          }
+        },
+        {
+          id: '44409b97-a477-47a8-a334-e8394e35b20a',
+          version: '1.0.0',
+          url: 'https://github.com/izure1/Codraft',
+          author: 'izure1',
+          group: '콘솔',
+          title: '콘솔에 메세지를 남깁니다',
+          description: '콘솔에 {{ type }} 메세지 {{ message }}(를)을 남깁니다.',
+          variables: {
+            'type': {
               type: 'radio',
               default_value: 0,
               items: [
                 {
-                  preview: '좌',
-                  value: 1
+                  preview: '일반',
+                  value: 0
                 },
                 {
-                  preview: '우',
-                  value: 2
+                  preview: '에러',
+                  value: 1
                 }
               ]
-            }
-          },
-          fn(data, next, stop) {
-            if (data.event && data.event.which === this.which) {
-              return next(data)
-            }
-            else {
-              return stop()
-            }
-          }
-        }
-      ]
-      const actions = [
-        {
-          id: 'action-1',
-          version: '1.0.0',
-          url: 'https://izure.org',
-          author: 'izure',
-          group: 'click',
-          title: '알람을 띄웁니다',
-          description: '알람 내용 {{ content }}(를)을 띄웁니다',
-          variables: {
-            'content': {
+            },
+            'message': {
               type: 'string',
-              default_value: 'hello, world!'
+              default_value: 'Hello World'
             }
           },
-          fn(data, next, stop) {
-            alert(this.content)
+          fn: function(data, next, stop) {
+            switch (this.type) {
+              case 0: {
+                console.log(this.message)
+                break
+              }
+              case 1: {
+                console.error(this.message)
+                break
+              }
+            }
+            next(data)
+          }
+        },
+        {
+          id: 'a27d65e3-ccdf-4cbf-bf44-5cedd4422b09',
+          version: '1.0.0',
+          url: 'https://github.com/izure1/Codraft',
+          author: 'izure1',
+          group: '대화상자',
+          title: '사용자로부터 값을 입력받습니다',
+          description: '사용자로부터 값을 입력받습니다. 질문글 {{ question }}(과)와, 미리보기 대답으로 {{ preview }}(를)을 보여줍니다. 그리고 사용자의 대답을 {{ var_type }}변수 변수명 {{ var_name }}에 저장합니다. 이 명령어는 브라우저에서만 작동합니다.',
+          variables: {
+            'question': {
+              type: 'string',
+              default_value: '당신의 이름은?'
+            },
+            'preview': {
+              type: 'string',
+              default_value: '홍길동'
+            },
+            'var_type': {
+              type: 'radio',
+              default_value: 'local',
+              items: [
+                {
+                  preview: '지역',
+                  value: 'local'
+                },
+                {
+                  preview: '전역',
+                  value: 'global'
+                }
+              ]
+            },
+            'var_name': {
+              type: 'string',
+              default_value: '이름'
+            }
+          },
+          fn: function(data, next, stop) {
+            if (typeof process === 'object') {
+              return stop(new Error('브라우저 환경에서만 작동합니다.'))
+            }
+
+            const answer = prompt(this.question, this.preview)
+            const varTarget = data[this.var_type]
+            varTarget[this.var_name] = answer
+
             next(data)
           }
         }
       ]
+
       const saved = {
-        used_commands: {
-          'event-1': '1.0.0'
-        },
-        boxes: [
-          {
-            id: 'box-1',
-            events: [
-              {
-                id: 'event-command-1',
-                command_id: 'event-1',
-                variables: {
-                  'which': '1'
-                }
-              }
-            ],
-            conditions: [],
-            actions: [
-              {
-                id: 'action-command-1',
-                command_id: 'action-1',
-                variables: {
-                  'content': 'asdfasdf'
-                }
-              }
-            ],
-            next_box_ids: ['box-2'],
-            comment: '',
-            x: 0,
-            y: 0,
+          "used_commands": {
+              "d6d1a1b7-7e9f-4011-b6d4-c5427c8e75fd": "1.0.0",
+              "a3a94a3c-c1e2-48f9-b9cc-9884a07b0c4c": "1.0.0",
+              "82b0915e-b405-445d-9695-0e62bc6f9b8e": "1.0.0",
+              "b1502706-475e-41f5-a7da-db2394fdd514": "1.0.0",
+              "a462f912-189e-4db4-9be8-a14d91c30dc6": "1.0.0",
+              "c72283ad-75ef-4d48-a288-f048136feaea": "1.0.0",
+              "3818d689-31f8-4884-94c5-e1b865a0f4ad": "1.0.0",
+              "b792d0ee-7658-45a9-8fc5-19bd4d6c8103": "1.0.0",
+              "9363be2f-3491-454f-9b29-5f4276dba174": "1.0.0",
+              "def3d7b6-8541-4361-a748-8d1c7ee37b9e": "1.0.0",
+              "7eddc4ba-5164-4193-975e-99d5630e48e4": "1.0.0",
+              "b5e135fa-4dc3-40db-bae9-424dc8d476b2": "1.0.0",
+              "0c1cedc1-1713-4fe9-ae7d-9aa8a27778fb": "1.0.0",
+              "7dca9a28-576f-4f27-8aba-ed3c8cf19ff4": "1.0.0",
+              "a27d65e3-ccdf-4cbf-bf44-5cedd4422b09": "1.0.0",
+              "44409b97-a477-47a8-a334-e8394e35b20a": "1.0.0"
           },
-          {
-            id: 'box-2',
-            events: [
+          "boxes": [
               {
-                id: 'event-command-1',
-                command_id: 'event-1',
-                variables: {
-                  'which': '2'
-                }
-              }
-            ],
-            conditions: [
+                  "id": "DwCj4IBxGa6HLpW3I2ar7",
+                  "x": 86,
+                  "y": 207,
+                  "comment": "",
+                  "next_box_ids": [
+                      "tCTf5syB8nExZ3iWTLsxv"
+                  ],
+                  "events": [
+                      {
+                          "id": "ygdYyzYr-j1f4wYvorWH_",
+                          "command_id": "d6d1a1b7-7e9f-4011-b6d4-c5427c8e75fd",
+                          "variables": {}
+                      }
+                  ],
+                  "conditions": [],
+                  "actions": [
+                      {
+                          "id": "UTF8ba9usuBmGwqxRN8Qm",
+                          "command_id": "44409b97-a477-47a8-a334-e8394e35b20a",
+                          "variables": {
+                              "type": "0",
+                              "message": "Hello World {{ 이름 }}"
+                          }
+                      }
+                  ]
+              },
               {
-                id: 'condition-command-1',
-                command_id: 'condition-1',
-                variables: {
-                  'which': '{{ which }}'
-                }
+                  "id": "tCTf5syB8nExZ3iWTLsxv",
+                  "x": 609,
+                  "y": 561,
+                  "comment": "",
+                  "next_box_ids": [],
+                  "events": [],
+                  "conditions": [],
+                  "actions": [
+                      {
+                          "id": "71DEJ-5UgTqDxo_Kihzo0",
+                          "command_id": "a27d65e3-ccdf-4cbf-bf44-5cedd4422b09",
+                          "variables": {
+                              "question": "당신의 이름은?",
+                              "preview": "홍길동",
+                              "var_type": "local",
+                              "var_name": "이름"
+                          }
+                      },
+                      {
+                          "id": "Vr7LzNCAobdMqXCr0xeQx",
+                          "command_id": "0c1cedc1-1713-4fe9-ae7d-9aa8a27778fb",
+                          "variables": {
+                              "message": "{{ 이름 }}님, 안녕하세요."
+                          }
+                      }
+                  ]
               }
-            ],
-            actions: [
-              {
-                id: 'action-command-1',
-                command_id: 'action-1',
-                variables: {
-                  'content': '{{ which }} * {{ which }}'
-                }
-              }
-            ],
-            next_box_ids: [],
-            comment: '',
-            x: 0,
-            y: 0,
-          }
-        ]
+          ]
       }
 
       const { Runner } = Codraft
-      const runner = new Runner(events, conditions, actions, saved)
+      const runner = new Runner(events, conditions, actions, saved, true)
 
       runner.init()
       console.log(runner)

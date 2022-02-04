@@ -9,22 +9,18 @@
         margin: 0;
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@codraft/core@1.0.0/dist/core/src/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@codraft/core@1.x.x/dist/core/src/index.min.js"></script>
     <script type="module">
       import { events, conditions, actions } from './js/commands.js'
 
       const { Runner } = Codraft
-
-      const events = []
-      const conditions = []
-      const actions = []
-
       const rawSaveData = localStorage.getItem('codraft-save')
 
       if (rawSaveData) {
         try {
           const saveData = JSON.parse(rawSaveData)
           const runner = new Runner(events, conditions, actions, saveData)
+          runner.init()
         } catch (reason) {
           alert(reason)
         }

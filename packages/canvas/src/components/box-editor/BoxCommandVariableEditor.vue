@@ -30,7 +30,7 @@
               v-for="(button, i) in variable.items"
               :key="`radio-${i}`"
               :label="button.preview"
-              :value="JSON.stringify(button.value)"
+              :value="convertButtonValue(button.value)"
             />
           </v-radio-group>
         </div>
@@ -97,6 +97,8 @@ export default defineComponent({
 
     const save = (key: string, data: SupportedVariableType) => emit('resolve', key, data)
     const close = () => emit('reject')
+    
+    const convertButtonValue = (v: unknown) => typeof v === 'string' ? v : JSON.stringify(v)
 
     watch(() => props.default_value, () => returnData.value = default_value_ensured.value)
     watch(() => props.command, () => returnData.value = default_value_ensured.value)
@@ -105,7 +107,8 @@ export default defineComponent({
       returnData,
       variable,
       save,
-      close
+      close,
+      convertButtonValue
     }
   }
 })

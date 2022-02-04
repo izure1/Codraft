@@ -19,7 +19,7 @@ export class CodraftRunner {
   private static ParseVariables(variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>, isDebug = false): Record<string, SupportedVariableType> {
     const clone: Record<string, SupportedVariableType> = {}
     for (const key in variables) {
-      clone[key] = CodraftRunner.ParseVariable(variables[key], local, global)
+      clone[key] = CodraftRunner.ParseVariable(variables[key], local, global, isDebug)
     }
     return clone
   }
