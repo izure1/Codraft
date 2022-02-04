@@ -7,7 +7,7 @@
   >
     <div class="grey darken-3 py-2">
       <v-card-title class="py-0">
-        <span class="text-subtitle-1">{{ box.id }}</span>
+        <span class="text-subtitle-1">{{ box.comment || box.id }}</span>
         <v-spacer />
         <v-tooltip
           v-for="(control, i) in controls"
@@ -28,7 +28,7 @@
           <span class="text-caption">{{ control.description }}</span>
         </v-tooltip>
       </v-card-title>
-      <v-card-subtitle class="pt-3 py-0 font-weight-regular text-caption grey--text">{{ box.comment }}</v-card-subtitle>
+      <!-- <v-card-subtitle class="pt-3 py-0 font-weight-regular text-caption grey--text">{{ box.comment }}</v-card-subtitle> -->
     </div>
 
     <div>
