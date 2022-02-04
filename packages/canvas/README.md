@@ -32,7 +32,7 @@ import '@codraft/canvas'
 ### Browser
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@codraft/canvas@1.x.x/dist/codraft-canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@codraft/canvas@latest/dist/codraft-canvas.min.js"></script>
 ```
 
 ### *CSS Style 오염 문제 (선택)*

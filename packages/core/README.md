@@ -37,7 +37,7 @@ import { Runner } from '@codraft/core'
 #### Browser
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@codraft/core@1.x.x/dist/core/src/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@codraft/core@latest/dist/core/src/index.min.js"></script>
 ```
 
 ```javascript
