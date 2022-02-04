@@ -14,9 +14,10 @@ import c3 from './condition/checkProtocol.js'
 
 import a1 from './action/alert.js'
 import a2 from './action/confirm.js'
-import a4 from './action/consolelog.js'
-import a3 from './action/prompt.js'
+import a3 from './action/consolelog.js'
+import a4 from './action/prompt.js'
+import a5 from './action/variable.js'
 
 export const events = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
 export const conditions = [c1, c2, c3]
-export const actions = [a1, a2, a3, a4]
+export const actions = [a1, a2, a3, a4, a5]
