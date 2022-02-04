@@ -32,7 +32,7 @@ export default {
   },
   fn: function(data, next, stop) {
     const varTarget = data[this.var_type]
-    varTarget[this.var_name] = var_content
+    varTarget[this.var_name] = this.var_content
 
     next(data)
   }
