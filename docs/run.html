@@ -18,8 +18,9 @@
 
       if (rawSaveData) {
         try {
+          const isDebugMode = true
           const saveData = JSON.parse(rawSaveData)
-          const runner = new Runner(events, conditions, actions, saveData)
+          const runner = new Runner(events, conditions, actions, saveData, isDebugMode)
           runner.init()
         } catch (reason) {
           alert(reason)
