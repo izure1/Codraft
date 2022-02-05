@@ -50,10 +50,15 @@ export class CodraftRunner {
       // Javascript syntax
       result = Mexp.eval(equation)
     } catch (reason) {
-      // Raw string
-      result = equation
-      if (isDebug) {
-        console.error(reason)
+      // is primitive type?
+      try {
+        result = JSON.parse(equation)
+      } catch (reason) {
+        // Raw string
+        result = equation
+        if (isDebug) {
+          console.error(reason)
+        }
       }
     }
     return result
