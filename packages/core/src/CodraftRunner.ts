@@ -112,7 +112,7 @@ export class CodraftRunner {
 
   private __runCommands(formats: Codraft.MacroCommandSaveFormat[], data: MacroDataTransfer): Promise<void> {
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise<void>(async (resolve, reject) => {
+    const promise = new Promise<void>(async (resolve, reject) => {
       let isFail = false
       for (const format of formats) {
         if (isFail) return
@@ -125,11 +125,15 @@ export class CodraftRunner {
         }
       }
       resolve()
-    }).catch((debugData) => {
+    })
+
+    promise.catch((debugData) => {
       if (this.__isDebug) {
         console.error(debugData)
       }
     })
+
+    return promise
   }
 
   private __recursiveBox(box: Codraft.MacroBox, data: MacroDataTransfer): void {
