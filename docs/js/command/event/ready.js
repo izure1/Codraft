@@ -3,17 +3,11 @@ export default {
   version: '1.0.0',
   url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
-  group: '페이지',
-  title: '페이지가 준비 되었을 때',
-  description: '페이지가 준비되었을 때 작동합니다. 이 명령어는 브라우저에서만 작동합니다.',
+  group: '시간',
+  title: '준비 되었을 때',
+  description: 'Codraft가 실행되었을 때 작동합니다. 초기화할 때 사용할 수 있습니다.',
   variables: {},
   fn: function(data, next, stop) {
-    if (typeof process === 'object') {
-      return stop(new Error('브라우저 환경에서만 작동합니다.'))
-    }
-    document.addEventListener('ready', (e) => {
-      data.event = e
-      next(data)
-    })
+    next(data)
   }
 }

@@ -1,27 +1,59 @@
-import e1 from './event/click.js'
-import e2 from './event/contextmenu.js'
-import e3 from './event/keydown.js'
-import e4 from './event/keyup.js'
-import e5 from './event/mousedown.js'
-import e6 from './event/mousemove.js'
-import e7 from './event/mouseup.js'
-import e8 from './event/ready.js'
-import e9 from './event/wheel.js'
+import event_click from './command/event/click.js'
+import event_contextmenu from './command/event/contextmenu.js'
+import event_keydown from './command/event/keydown.js'
+import event_keyup from './command/event/keyup.js'
+import event_mousedown from './command/event/mousedown.js'
+import event_mousemove from './command/event/mousemove.js'
+import event_mouseup from './command/event/mouseup.js'
+import event_ready from './command/event/ready.js'
+import event_wheel from './command/event/wheel.js'
 
-import c1 from './condition/check-environment.js'
-import c2 from './condition/check-mouse-which.js'
-import c3 from './condition/check-protocol.js'
-import c4 from './condition/variable.js'
+export const events = [
+  event_click,
+  event_contextmenu,
+  event_keydown,
+  event_keyup,
+  event_mousedown,
+  event_mousemove,
+  event_mouseup,
+  event_ready,
+  event_wheel
+]
 
-import a1 from './action/alert.js'
-import a2 from './action/confirm.js'
-import a3 from './action/consolelog.js'
-import a4 from './action/prompt.js'
-import a5 from './action/variable.js'
-import a6 from './action/mouse-position.js'
-import a7 from './action/DOM-attribute.js'
-import a8 from './action/delete-variable.js'
+import condition_checkEnvironment from './command/condition/check-environment.js'
+import condition_checkMouseWhich from './command/condition/check-mouse-which.js'
+import condition_checkProtocol from './command/condition/check-protocol.js'
+import condition_variable from './command/condition/variable.js'
 
-export const events = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
-export const conditions = [c1, c2, c3, c4]
-export const actions = [a1, a2, a3, a4, a5, a6, a7, a8]
+export const conditions = [
+  condition_checkEnvironment,
+  condition_checkMouseWhich,
+  condition_checkProtocol,
+  condition_variable
+]
+
+import action_alert from './command/action/alert.js'
+import action_confirm from './command/action/confirm.js'
+import action_consolelog from './command/action/consolelog.js'
+import action_deleteVariable from './command/action/delete-variable.js'
+import action_DOMAttribute from './command/action/DOM-attribute.js'
+import action_locationReplace from './command/action/location-replace.js'
+import action_mousePosition from './command/action/mouse-position.js'
+import action_prompt from './command/action/prompt.js'
+import action_settimeout from './command/action/settimeout.js'
+import action_variable from './command/action/variable.js'
+import action_windowOpen from './command/action/window-open.js'
+
+export const actions = [
+  action_alert,
+  action_confirm,
+  action_consolelog,
+  action_deleteVariable,
+  action_DOMAttribute,
+  action_locationReplace,
+  action_mousePosition,
+  action_prompt,
+  action_settimeout,
+  action_variable,
+  action_windowOpen
+]
