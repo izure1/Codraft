@@ -151,7 +151,7 @@ function onReady(e) {
 
 ### 명령어의 `fn` 함수
 
-`fn`함수는 명령어의 `fn` 함수는 실제 동작하는 부분입니다. `@codraft/core`에서 콜백함수로 작동합니다.
+명령어의 `fn` 함수는 `@codraft/core`에서 콜백함수로 실제 작동합니다.
 
 이 함수의 `this`는 명령어의 `variables`를 참조합니다. 따라서 `this`를 참조할 수 없는 [`arrow function`](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Functions/Arrow_functions)으로 작성해선 안됩니다.
 
@@ -234,7 +234,7 @@ if (ok) {
 }
 ```
 
-**stop**: (reason?: `Error`) => `void`
+**stop**: (reason?: `any`) => `void`
 
 현재 명령어에서 오류가 발생하였거나, 이후의 명령어의 작동을 중지해야할 때 사용합니다. 이 함수를 호출하면 `@codraft/core`에서 다음 명령어를 실행하지 않으며, 스트림이 중단됩니다. `reason` 매개변수를 사용하여 오류를 전송할 수 있으며, 이 메세지는 console에서 확인할 수 있습니다.
 
