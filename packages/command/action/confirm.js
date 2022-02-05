@@ -26,18 +26,8 @@ export default {
       ]
     },
     'var_name': {
-      type: 'radio',
-      default_value: true,
-      items: [
-        {
-          preview: '예',
-          value: true
-        },
-        {
-          preview: '아니오',
-          value: false
-        }
-      ]
+      type: 'string',
+      default_value: '변수명'
     }
   },
   fn: function(data, next, stop) {
