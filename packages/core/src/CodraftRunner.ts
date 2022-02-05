@@ -56,9 +56,6 @@ export class CodraftRunner {
       } catch (reason) {
         // Raw string
         result = equation
-        if (isDebug) {
-          console.error(reason)
-        }
       }
     }
     return result
@@ -115,19 +112,24 @@ export class CodraftRunner {
 
   private __runCommands(formats: Codraft.MacroCommandSaveFormat[], data: MacroDataTransfer): Promise<void> {
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       let isFail = false
       for (const format of formats) {
         if (isFail) return
         else {
-          await new Promise((next, stop) => this.__runCommand(format, data).then(next).catch(stop)).catch(() => {
+          await new Promise((next, stop) => this.__runCommand(format, data).then(next).catch(stop)).catch((reason) => {
             isFail = true
-            reject()
+            const debugData = { format, data, reason }
+            reject(debugData)
           })
         }
       }
       resolve()
-    }) 
+    }).catch((debugData) => {
+      if (this.__isDebug) {
+        console.error(debugData)
+      }
+    })
   }
 
   private __recursiveBox(box: Codraft.MacroBox, data: MacroDataTransfer): void {

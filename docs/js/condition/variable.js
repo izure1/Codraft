@@ -122,6 +122,7 @@ export default {
     }
 
     if (!success) {
+      console.log(value, this.var_value)
       return stop()
     }
 
