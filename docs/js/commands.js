@@ -11,13 +11,16 @@ import e9 from './event/wheel.js'
 import c1 from './condition/checkEnvironment.js'
 import c2 from './condition/checkMouseWhich.js'
 import c3 from './condition/checkProtocol.js'
+import c4 from './condition/variable'
 
 import a1 from './action/alert.js'
 import a2 from './action/confirm.js'
 import a3 from './action/consolelog.js'
 import a4 from './action/prompt.js'
 import a5 from './action/variable.js'
+import a6 from './action/mousePosition'
+import a7 from './action/DOMAttribute'
 
 export const events = [e1, e2, e3, e4, e5, e6, e7, e8, e9]
-export const conditions = [c1, c2, c3]
-export const actions = [a1, a2, a3, a4, a5]
+export const conditions = [c1, c2, c3, c4]
+export const actions = [a1, a2, a3, a4, a5, a6, a7]
