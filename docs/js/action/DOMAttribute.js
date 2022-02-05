@@ -31,7 +31,7 @@ export default {
     }
   },
   fn: function(data, next, stop) {
-    if (data.event instanceof MouseEvent) {
+    if (!(data.event instanceof MouseEvent)) {
       return stop(new Error('이벤트가 마우스 이벤트일 경우에만 작동합니다.'))
     }
     
