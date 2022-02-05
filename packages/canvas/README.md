@@ -136,7 +136,7 @@ const {
 
 ## 명령어(Command)
 
-[명령어 README](../command/)를 참조하십시오.
+[명령어 README](../../docs/js/command/)를 참조하십시오.
 
 ## 라이프사이클
 
