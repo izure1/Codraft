@@ -236,3 +236,11 @@ if (rawData) {
   runner.init()
 }
 ```
+
+## 배경색 지정
+
+`data-codraft-background` 속성으로 캔버스의 배경색을 지정할 수 있습니다. 지정하지 않는다면 기본적으로 `transparent` 색상이 배경색으로 지정됩니다. 이 값은 CSS의 `background` 속성과 동일합니다.
+
+```html
+<codraft-canvas data-codraft-background="rgba(55, 55, 55, 0.1)">
+```
