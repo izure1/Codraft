@@ -6,6 +6,7 @@
         v-model="selectedCommandID"
         :no-data-text="'찾는 명령어가 없습니다'"
         :menu-props="{ 'nudge-right': 24, 'nudge-top': -74 }"
+        :disabled="!!command"
         :attach="currentElement"
         :items="commandItems"
         class="mt-5"

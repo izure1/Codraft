@@ -44,12 +44,12 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
       value = format.variables[key]
     }
     else {
-      // 저장된 값이 없다면 커맨드에 있는지 확인합니다.
+      // 저장된 값이 없다면 명령어에 있는지 확인합니다.
       if (key in origin.variables) {
         // 있다면 지정된 기본값을 가져옵니다.
         value = defaultValue.variables[key]
       }
-      // 없다면 커맨드의 오류입니다.
+      // 없다면 명령어의 오류입니다.
       else {
         value = 'UNKNOWN'
         color = 'red--text'
@@ -74,7 +74,7 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
         preview = value
       }
     }
-    // 없다면 커맨드의 오류입니다.
+    // 없다면 명령어의 오류입니다.
     else {
       preview = 'UNKNOWN'
       color = 'red--text'

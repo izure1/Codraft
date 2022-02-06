@@ -25,7 +25,7 @@
           v-else
           class="red--text text-caption"
         >
-          삭제된 커맨드입니다.
+          삭제된 명령어입니다.
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>

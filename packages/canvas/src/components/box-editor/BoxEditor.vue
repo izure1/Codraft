@@ -68,7 +68,7 @@
 
                     <v-list-item v-else>
                       <v-list-item-subtitle>
-                        <strong>{{ format.command_id }}</strong>(은)는 존재하지 않는 커맨드입니다.
+                        <strong>{{ format.command_id }}</strong>(은)는 존재하지 않는 명령어입니다.
                       </v-list-item-subtitle>
                     </v-list-item>
                   </div>
