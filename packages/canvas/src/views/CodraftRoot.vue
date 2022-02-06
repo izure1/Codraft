@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :style="{ background: background }">
     <codraft-canvas v-if="isMounted" />
   </v-app>
 </template>
@@ -11,6 +11,12 @@ import CodraftCanvas from '@/views/CodraftCanvas.vue'
 export default defineComponent({
   components: {
     CodraftCanvas
+  },
+  props: {
+    background: {
+      type: String,
+      required: true
+    }
   },
   setup() {
     const isMounted = ref(false)

@@ -1,12 +1,12 @@
 <template>
-  <codraft-root />
+  <codraft-root :background="background" />
 </template>
 
 <script lang="ts">
 import { Codraft } from '@typings/codraft'
 
 import Vue from 'vue'
-import { onMounted, watch } from '@vue/composition-api'
+import { onMounted, ref, watch } from '@vue/composition-api'
 import { DelayCall } from 'delay-call'
 
 import store from '@/plugins/store'
@@ -16,6 +16,29 @@ import '@/plugins/dragscroll'
 
 import { useAdvancedArray, useAdvancedObject, useComponentUtils, useStore } from '@/components/common'
 import CodraftRoot from '@/views/CodraftRoot.vue'
+
+function useElementDataset() {
+  const { deepCopy } = useAdvancedObject()
+
+  const getDataAttributes = (target: HTMLElement) => {
+    return deepCopy(target.dataset)
+  }
+
+  const getDataAttribute = (target: HTMLElement, attribute: string) => {
+    const attributes = getDataAttributes(target)
+    return attributes[attribute] ?? null
+  }
+
+  const hasDataAttribute = (target: HTMLElement, attribute: string) => {
+    return getDataAttribute(target, attribute) !== null
+  }
+
+  return {
+    getDataAttributes,
+    getDataAttribute,
+    hasDataAttribute
+  }
+}
 
 function usePublicMethod() {
   const { dispatch, state } = useStore()
@@ -96,6 +119,7 @@ export default Vue.extend({
     const { currentElement } = useComponentUtils()
     const { deepCopy } = useAdvancedObject()
     const { save, load, addEventCommand, addConditionCommand, addActionCommand, setEventCommands, setConditionCommands, setActionCommands } = usePublicMethod()
+    const { getDataAttribute } = useElementDataset()
 
     const getRootElement = () => {
       const element = currentElement.value
@@ -110,9 +134,18 @@ export default Vue.extend({
     }
 
     const methods = { save, load, addEventCommand, addConditionCommand, addActionCommand, setEventCommands, setConditionCommands, setActionCommands }
+    const background = ref('transparent')
 
     waitMount(() => {
-      const target = getRootElement()
+      const target = getRootElement() as HTMLElement
+
+      // get attribute
+      const propBackground = getDataAttribute(target, 'codraftBackground')
+      if (propBackground !== null) {
+        background.value = propBackground
+      }
+
+      // emit ready event
       const event = new CustomEvent('codraft-ready', {
         detail: { ...methods }
       })
@@ -143,7 +176,9 @@ export default Vue.extend({
       })
     })
 
-    return {}
+    return {
+      background
+    }
   }
 })
 </script>
