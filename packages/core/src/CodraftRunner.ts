@@ -54,7 +54,6 @@ export class CodraftRunner {
     })
     
     let result
-    console.log(command, key, CodraftRunner.GetVariableType(command, key))
     switch (CodraftRunner.GetVariableType(command, key)) {
       case 'number': {
         result = Mexp.eval(equation)

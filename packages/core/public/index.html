@@ -40,7 +40,7 @@
           description: '{{ var_type }}변수 {{ var_name }}의 값이 {{ var_value }} {{ compare }}(일) 경우 작동합니다.',
           variables: {
             'var_type': {
-              type: 'radio',
+              type: 'string',
               default_value: 'localOrGlobal',
               items: [
                 {
@@ -66,7 +66,7 @@
               default_value: '변수값'
             },
             'compare': {
-              type: 'radio',
+              type: 'string',
               default_value: 'eq',
               items: [
                 {
@@ -172,7 +172,7 @@
           description: '대화상자에 내용{{ message }}(를)을 보여줍니다. 이 명령어는 브라우저에서만 작동합니다.',
           variables: {
             'message': {
-              type: 'number',
+              type: 'string',
               default_value: 'Hello, World!'
             }
           },
@@ -195,7 +195,7 @@
           description: '콘솔에 {{ type }} 메세지 {{ message }}(를)을 남깁니다.',
           variables: {
             'type': {
-              type: 'radio',
+              type: 'number',
               default_value: 0,
               items: [
                 {
@@ -245,7 +245,7 @@
               default_value: '홍길동'
             },
             'var_type': {
-              type: 'radio',
+              type: 'string',
               default_value: 'local',
               items: [
                 {
