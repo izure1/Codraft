@@ -16,7 +16,7 @@ export class CodraftRunner {
     return map
   }
 
-  private static GetVariableType(command: Codraft.MacroCommand, key: string): RawVariable['type']|null {
+  private static GetVariableType(command: Codraft.MacroCommand, key: string): RawVariable<SupportedVariableType>['type']|null {
     if (key in command.variables) {
       return command.variables[key].type
     }
@@ -61,7 +61,7 @@ export class CodraftRunner {
         break
       }
       case 'boolean': {
-        result = JSON.parse(equation)
+        result = equation.toLowerCase() === 'true'
         break
       }
       // is primitive type?
