@@ -60,7 +60,7 @@ export class CodraftRunner {
         result = Mexp.eval(equation)
         break
       }
-      case 'object': {
+      case 'boolean': {
         result = JSON.parse(equation)
         break
       }

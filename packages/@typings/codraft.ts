@@ -5,7 +5,7 @@ export declare type VariableItem<T> = {
 }
 export declare type SupportedVariableType = string|number|boolean
 export declare interface RawVariable<T> {
-  type: 'string'|'number'|'boolean'|'object'
+  type: 'string'|'number'|'boolean'
   default_value: T
   items?: VariableItem<T>[]
 }
@@ -20,10 +20,6 @@ export declare interface NumberVariable extends RawVariable<number> {
 export declare interface BooleanVariable extends RawVariable<boolean> {
   type: 'boolean'
   default_value: boolean
-}
-export declare interface ObjectVariable extends RawVariable<Object> {
-  type: 'object'
-  default_value: Object
 }
 
 export declare type MacroVariable = StringVariable|NumberVariable|BooleanVariable

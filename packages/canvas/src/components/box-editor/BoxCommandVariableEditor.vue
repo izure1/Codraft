@@ -14,7 +14,7 @@
           </v-radio-group>
         </div>
         <div v-else>
-          <div v-if="variable.type === 'string' || variable.type === 'object'">
+          <div v-if="variable.type === 'string'">
             <v-textarea
               v-model="returnData"
               no-resize
