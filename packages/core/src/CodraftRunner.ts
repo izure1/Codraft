@@ -1,4 +1,4 @@
-import { Codraft, MacroDataTransfer, SupportedVariableType } from '@typings/codraft'
+import { Codraft, MacroDataTransfer, RawVariable, SupportedVariableType } from '@typings/codraft'
 import Mexp from 'math-expression-evaluator'
 
 export class CodraftRunner {
@@ -16,19 +16,27 @@ export class CodraftRunner {
     return map
   }
 
-  private static ParseVariables(variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>, isDebug = false): Record<string, SupportedVariableType> {
+  private static GetVariableType(command: Codraft.MacroCommand, key: string): RawVariable['type']|null {
+    if (key in command.variables) {
+      return command.variables[key].type
+    }
+    return null
+  }
+
+  private static ParseVariables(command: Codraft.MacroCommand, variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): Record<string, SupportedVariableType> {
     const clone: Record<string, SupportedVariableType> = {}
     for (const key in variables) {
-      clone[key] = CodraftRunner.ParseVariable(variables[key], local, global, isDebug)
+      clone[key] = CodraftRunner.ParseVariable(command, variables, key, local, global)
     }
     return clone
   }
 
-  private static ParseVariable(variable: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>, isDebug = false): SupportedVariableType {
+  private static ParseVariable(command: Codraft.MacroCommand, variables: Record<string, string>, key: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
     const local_regexp = /{{2}\s*(.*?)\s*}{2}/gmi
     const global_regexp = /{{3}\s*(.*?)\s*}{3}/gmi
 
-    const equation = variable.replace(global_regexp, (matched, key) => {
+    const value = variables[key]
+    const equation = value.replace(global_regexp, (matched, key) => {
       let raw: SupportedVariableType = matched
       if (key in global) raw = global[key]
       if (typeof raw !== 'string') {
@@ -46,30 +54,36 @@ export class CodraftRunner {
     })
     
     let result
-    try {
-      // Javascript syntax
-      result = Mexp.eval(equation)
-    } catch (reason) {
-      // is primitive type?
-      try {
+    console.log(command, key, CodraftRunner.GetVariableType(command, key))
+    switch (CodraftRunner.GetVariableType(command, key)) {
+      case 'number': {
+        result = Mexp.eval(equation)
+        break
+      }
+      case 'object': {
         result = JSON.parse(equation)
-      } catch (reason) {
-        // Raw string
+        break
+      }
+      // is primitive type?
+      case 'string':
+      default: {
         result = equation
+        break
       }
     }
+
     return result
   }
 
-  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], isDebug = false): Promise<MacroDataTransfer> {
+  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0]): Promise<MacroDataTransfer> {
     return new Promise<MacroDataTransfer>((resolve, reject) => {
-      const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global, isDebug)
+      const parsedVars = CodraftRunner.ParseVariables(command, variables, dataTransfer.local, dataTransfer.global)
       command.fn.call(parsedVars, dataTransfer, resolve, reject)
     })
   }
   
-  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void, isDebug = false): void {
-    const parsedVars = CodraftRunner.ParseVariables(variables, dataTransfer.local, dataTransfer.global, isDebug)
+  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
+    const parsedVars = CodraftRunner.ParseVariables(command, variables, dataTransfer.local, dataTransfer.global)
     command.fn.call(parsedVars, dataTransfer, resolve, reject)
   }
 
@@ -92,7 +106,7 @@ export class CodraftRunner {
     const { command_id, variables } = format
     const command = this.__commandHashMap.get(command_id) ?? null
     if (command !== null) {
-      return await CodraftRunner.RunCommand(command, variables, data, this.__isDebug)
+      return await CodraftRunner.RunCommand(command, variables, data)
     }
     else {
       throw new Error(`The '${command_id}' command not exists.`)
@@ -103,7 +117,7 @@ export class CodraftRunner {
     const { command_id, variables } = format
     const command = this.__commandHashMap.get(command_id) ?? null
     if (command !== null) {
-      CodraftRunner.RunCommandAsync(command, variables, data, resolve, reject, this.__isDebug)
+      CodraftRunner.RunCommandAsync(command, variables, data, resolve, reject)
     }
     else {
       throw new Error(`The '${command_id}' command not exists.`)
@@ -155,5 +169,9 @@ export class CodraftRunner {
 
   init(): void {
     this.__attachEvent()
+  }
+
+  setDebugMode(isDebug: boolean): void {
+    this.__isDebug = isDebug
   }
 }

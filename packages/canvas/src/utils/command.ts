@@ -1,4 +1,4 @@
-import { AdvancedVariable, Codraft } from '@typings/codraft'
+import { Codraft, RawVariable, SupportedVariableType } from '@typings/codraft'
 
 import { nanoid } from 'nanoid'
 import { deepCopy } from './advancedObject'
@@ -60,8 +60,8 @@ export function parseCommandDescription(origin: Codraft.MacroCommand, format: Co
     // variables[key].items 속성이 있다면, item.preview 속성을 이용하여 미리보기값을 가져와야 합니다.
     if (key in origin.variables) {
       if ('items' in origin.variables[key]) {
-        const variable = origin.variables[key] as AdvancedVariable<any>
-        const matched = variable.items.find((item) => value === ensureString(item.value)) ?? null
+        const variable = origin.variables[key] as RawVariable<SupportedVariableType>
+        const matched = variable.items!.find((item) => value === ensureString(item.value)) ?? null
         if (matched === null) {
           preview = 'UNKNOWN'
           color = 'red--text'

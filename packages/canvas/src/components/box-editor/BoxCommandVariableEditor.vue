@@ -3,39 +3,51 @@
     <v-card-title class="grey darken-3 text-body-2 white--text">값을 입력하세요</v-card-title>
     <v-card-text class="mt-5">
       <v-form v-if="variable">
-        <div v-if="variable.type === 'string'">
-          <v-textarea
-            v-model="returnData"
-            no-resize
-            autofocus
-            counter
-            dense
-            solo
-          />
-        </div>
-        <div v-else-if="variable.type === 'number'">
-          <v-text-field
-            v-model="returnData"
-            type="text"
-            autofocus
-            counter
-            dense
-            solo
-            @keydown.enter.prevent="save(variable_key, returnData)"
-          />
-        </div>
-        <div v-else-if="variable.type === 'radio'">
+        <div v-if="variable.items">
           <v-radio-group v-model="returnData">
             <v-radio
               v-for="(button, i) in variable.items"
               :key="`radio-${i}`"
               :label="button.preview"
-              :value="convertButtonValue(button.value)"
+              :value="stringify(button.value)"
             />
           </v-radio-group>
         </div>
         <div v-else>
-          <v-alert type="error">Unknown variable type.</v-alert>
+          <div v-if="variable.type === 'string' || variable.type === 'object'">
+            <v-textarea
+              v-model="returnData"
+              no-resize
+              autofocus
+              counter
+              dense
+              solo
+            />
+          </div>
+          <div v-else-if="variable.type === 'number'">
+            <v-text-field
+              v-model="returnData"
+              type="text"
+              autofocus
+              counter
+              dense
+              solo
+              @keydown.enter.prevent="save(variable_key, returnData)"
+            />
+          </div>
+          <div v-else-if="variable.type === 'boolean'">
+            <v-radio-group v-model="returnData">
+              <v-radio
+                v-for="(tuple, i) in [['참', true], ['거짓', false]]"
+                :key="`radio-${i}`"
+                :label="tuple[0]"
+                :value="stringify(tuple[1])"
+              />
+            </v-radio-group>
+          </div>
+          <div v-else>
+            <v-alert type="error">Unknown variable type.</v-alert>
+          </div>
         </div>
       </v-form>
       <v-alert
@@ -95,10 +107,10 @@ export default defineComponent({
     const returnData = ref<SupportedVariableType>(default_value_ensured.value)
     const variable = computed(() => props.command.variables[props.variable_key])
 
-    const save = (key: string, data: SupportedVariableType) => emit('resolve', key, data)
+    const save = (key: string, data: SupportedVariableType) => emit('resolve', key, stringify(data))
     const close = () => emit('reject')
     
-    const convertButtonValue = (v: unknown) => typeof v === 'string' ? v : JSON.stringify(v)
+    const stringify = (v: unknown) => typeof v === 'string' ? v : JSON.stringify(v)
 
     watch(() => props.default_value, () => returnData.value = default_value_ensured.value)
     watch(() => props.command, () => returnData.value = default_value_ensured.value)
@@ -108,7 +120,7 @@ export default defineComponent({
       variable,
       save,
       close,
-      convertButtonValue
+      stringify
     }
   }
 })

@@ -4,30 +4,29 @@ export declare type VariableItem<T> = {
   value: T
 }
 export declare type SupportedVariableType = string|number|boolean
-export declare interface RawVariable {
-  type: 'string'|'number'|'radio',
-  default_value: SupportedVariableType
+export declare interface RawVariable<T> {
+  type: 'string'|'number'|'boolean'|'object'
+  default_value: T
+  items?: VariableItem<T>[]
 }
-export declare interface StringVariable extends RawVariable {
+export declare interface StringVariable extends RawVariable<string> {
   type: 'string'
   default_value: string
 }
-export declare interface NumberVariable extends RawVariable {
+export declare interface NumberVariable extends RawVariable<number> {
   type: 'number'
   default_value: number
 }
-export declare interface AdvancedVariable<T extends SupportedVariableType> extends RawVariable {
-  type: 'radio'
-  default_value: T
-  items: VariableItem<T>[]
+export declare interface BooleanVariable extends RawVariable<boolean> {
+  type: 'boolean'
+  default_value: boolean
 }
-export declare interface RadioVariable extends AdvancedVariable<SupportedVariableType> {
-  type: 'radio'
-  default_value: SupportedVariableType
-  items: VariableItem<SupportedVariableType>[]
+export declare interface ObjectVariable extends RawVariable<Object> {
+  type: 'object'
+  default_value: Object
 }
 
-export declare type MacroVariable = StringVariable|NumberVariable|RadioVariable
+export declare type MacroVariable = StringVariable|NumberVariable|BooleanVariable
 export declare type MacroDataTransfer = { event: any, local: Record<string, any>, global: any }
 export declare type Resolve = (data: MacroDataTransfer) => void
 export declare type Reject = (reason?: Error) => void
@@ -53,7 +52,7 @@ export declare namespace Codraft {
     title: string
     description: string
     variables: {
-      [key: string]: MacroVariable
+      [key: string]: RawVariable<SupportedVariableType>
     },
     fn: Fn
   }
