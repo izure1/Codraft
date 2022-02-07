@@ -23,11 +23,11 @@
   description: string // 명령어의 설명. 이곳에 사용자가 변수를 대입하여 코딩할 수 있습니다.
   variables: { // description 에서 사용한 변수를 이곳에 선언해야 합니다.
     [key: string]: {
-      type: 'string'|'number'|'radio',
-      default_value: string|number,
-      items?: [ // type이 radio일 시에만 등록해야 합니다.
+      type: 'string'|'number'|'boolean'|'object', // 입력된 값이 해석될 방식을 지정합니다.
+      default_value: string|number|boolean|Object,
+      items?: [ // 이 값을 지정하면 radio 방식으로 주어진 값만을 입력할 수 있습니다.
         preview: string,
-        value: string|number
+        value: string|number|boolean|Object
       ]
     }
 
@@ -73,7 +73,7 @@ const conditionSample = {
   description: '클릭한 마우스가 {{ which }}클릭일 경우 작동합니다.',
   variables: {
     'which': {
-      type: 'radio',
+      type: 'number',
       default_value: 1,
       items: [
         {
@@ -167,7 +167,7 @@ variables: {
     default_value: 'hello'
   },
   c: {
-    type: 'radio',
+    type: 'number',
     default_value: 1,
     items: [
       {
