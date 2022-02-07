@@ -12,7 +12,7 @@ export default {
       default_value: '당신은 사람입니까?'
     },
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'local',
       items: [
         {

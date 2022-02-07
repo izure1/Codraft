@@ -12,7 +12,7 @@ export default {
       default_value: 'id'
     },
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'local',
       items: [
         {

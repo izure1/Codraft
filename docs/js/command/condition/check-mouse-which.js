@@ -8,7 +8,7 @@ export default {
   description: '마우스 이벤트 대상이 {{ which }}버튼일 경우 작동합니다. 이 명령어는 브라우저에서만 작동합니다.',
   variables: {
     'which': {
-      type: 'radio',
+      type: 'number',
       default_value: 1,
       items: [
         {

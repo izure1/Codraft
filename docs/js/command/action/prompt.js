@@ -16,7 +16,7 @@ export default {
       default_value: '홍길동'
     },
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'local',
       items: [
         {

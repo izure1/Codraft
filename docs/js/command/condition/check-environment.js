@@ -8,7 +8,7 @@ export default {
   description: '현재 작동 환경이 {{ kind }}일 경우에 작동합니다.',
   variables: {
     'kind': {
-      type: 'radio',
+      type: 'number',
       default_value: 0,
       items: [
         {

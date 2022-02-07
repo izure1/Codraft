@@ -8,7 +8,7 @@ export default {
   description: '{{ var_type }}변수 {{ var_name }}의 값이 {{ var_value }} {{ compare }}(일) 경우 작동합니다.',
   variables: {
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'localOrGlobal',
       items: [
         {
@@ -34,7 +34,7 @@ export default {
       default_value: '변수값'
     },
     'compare': {
-      type: 'radio',
+      type: 'string',
       default_value: 'eq',
       items: [
         {

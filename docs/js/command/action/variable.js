@@ -8,7 +8,7 @@ export default {
   description: '{{ var_type }}변수 {{ var_name }}에 {{ var_content }}(이)란 값을 저장합니다.',
   variables: {
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'local',
       items: [
         {

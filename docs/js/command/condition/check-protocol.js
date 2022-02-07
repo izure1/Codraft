@@ -8,7 +8,7 @@ export default {
   description: '현재 프로토콜이 {{ protocol }}(일) 경우 작동합니다. 이 명령어는 브라우저에서만 작동합니다.',
   variables: {
     'protocol': {
-      type: 'radio',
+      type: 'string',
       default_value: 'https:',
       items: [
         {

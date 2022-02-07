@@ -8,7 +8,7 @@ export default {
   description: '{{ var_type }}변수 {{ var_name }}(를)을 삭제합니다.',
   variables: {
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'local',
       items: [
         {

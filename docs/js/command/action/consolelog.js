@@ -8,7 +8,7 @@ export default {
   description: '콘솔에 {{ type }} 메세지 {{ message }}(를)을 남깁니다.',
   variables: {
     'type': {
-      type: 'radio',
+      type: 'number',
       default_value: 0,
       items: [
         {

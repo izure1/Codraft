@@ -8,7 +8,7 @@ export default {
   description: '현재 마우스의 {{ pos_type }}(를)을 {{ var_type }}변수 {{ var_name }}에 담습니다. 이 명령어는 이벤트가 마우스 이벤트일 경우에만 작동합니다.',
   variables: {
     'pos_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'screenX',
       items: [
         {
@@ -46,7 +46,7 @@ export default {
       ]
     },
     'var_type': {
-      type: 'radio',
+      type: 'string',
       default_value: 'local',
       items: [
         {
