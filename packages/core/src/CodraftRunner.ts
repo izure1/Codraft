@@ -1,5 +1,5 @@
-import { Codraft, MacroDataTransfer, RawVariable, SupportedVariableType } from '@typings/codraft'
-import Mexp from 'math-expression-evaluator'
+import { Codraft, MacroDataTransfer, SupportedVariableType } from '@typings/codraft'
+import { CodraftSolver } from './CodraftSolver'
 
 export class CodraftRunner {
   private __events: Codraft.MacroCommand[]
@@ -10,20 +10,13 @@ export class CodraftRunner {
   private __commandHashMap: Map<string, Codraft.MacroCommand>
   private __isDebug: boolean
 
-  private static CreateHashMap<T extends { id: string }>(sources: T[]): Map<string, T> {
+  protected static CreateHashMap<T extends { id: string }>(sources: T[]): Map<string, T> {
     const map = new Map<string, T>()
     sources.forEach((source) => map.set(source.id, source))
     return map
   }
 
-  private static GetVariableType(command: Codraft.MacroCommand, key: string): RawVariable<SupportedVariableType>['type']|null {
-    if (key in command.variables) {
-      return command.variables[key].type
-    }
-    return null
-  }
-
-  private static ParseVariables(command: Codraft.MacroCommand, variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): Record<string, SupportedVariableType> {
+  protected static ParseVariables(command: Codraft.MacroCommand, variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): Record<string, SupportedVariableType> {
     const clone: Record<string, SupportedVariableType> = {}
     for (const key in variables) {
       clone[key] = CodraftRunner.ParseVariable(command, variables, key, local, global)
@@ -31,7 +24,7 @@ export class CodraftRunner {
     return clone
   }
 
-  private static ParseVariable(command: Codraft.MacroCommand, variables: Record<string, string>, key: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
+  protected static ParseVariable(command: Codraft.MacroCommand, variables: Record<string, string>, key: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
     const local_regexp = /{{2}\s*(.*?)\s*}{2}/gmi
     const global_regexp = /{{3}\s*(.*?)\s*}{3}/gmi
 
@@ -53,40 +46,28 @@ export class CodraftRunner {
       return raw
     })
     
-    let result
-    switch (CodraftRunner.GetVariableType(command, key)) {
-      case 'number': {
-        result = Mexp.eval(equation)
-        break
-      }
-      case 'boolean': {
-        result = equation.toLowerCase() === 'true'
-        break
-      }
-      // is primitive type?
-      case 'string':
-      default: {
-        result = equation
-        break
-      }
+    const type = CodraftSolver.GetVariableType(command, key)
+    const solver = CodraftSolver.GetVariableSolver(type)
+    if (!solver) {
+      throw new Error(`The unknown '${type}' type.`)
     }
 
-    return result
+    return solver(equation)
   }
 
-  private static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0]): Promise<MacroDataTransfer> {
+  protected static RunCommand(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: MacroDataTransfer): Promise<MacroDataTransfer> {
     return new Promise<MacroDataTransfer>((resolve, reject) => {
       const parsedVars = CodraftRunner.ParseVariables(command, variables, dataTransfer.local, dataTransfer.global)
       command.fn.call(parsedVars, dataTransfer, resolve, reject)
     })
   }
   
-  private static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: Parameters<typeof command.fn>[0], resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
+  protected static RunCommandAsync(command: Codraft.MacroCommand, variables: Record<string, string>, dataTransfer: MacroDataTransfer, resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
     const parsedVars = CodraftRunner.ParseVariables(command, variables, dataTransfer.local, dataTransfer.global)
     command.fn.call(parsedVars, dataTransfer, resolve, reject)
   }
 
-  private static FindBox(boxes: Codraft.MacroBox[], id: string): Codraft.MacroBox|null {
+  protected static FindBox(boxes: Codraft.MacroBox[], id: string): Codraft.MacroBox|null {
     return boxes.find((box) => box.id === id) ?? null
   }
 
@@ -101,7 +82,7 @@ export class CodraftRunner {
     this.__commandHashMap = CodraftRunner.CreateHashMap([...this.__events, ...this.__conditions, ...this.__actions])
   }
 
-  private async __runCommand(format: Codraft.MacroCommandSaveFormat, data: MacroDataTransfer): Promise<MacroDataTransfer> {
+  protected async __runCommand(format: Codraft.MacroCommandSaveFormat, data: MacroDataTransfer): Promise<MacroDataTransfer> {
     const { command_id, variables } = format
     const command = this.__commandHashMap.get(command_id) ?? null
     if (command !== null) {
@@ -112,7 +93,7 @@ export class CodraftRunner {
     }
   }
 
-  private __runCommandAsync(format: Codraft.MacroCommandSaveFormat, data: MacroDataTransfer, resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
+  protected __runCommandAsync(format: Codraft.MacroCommandSaveFormat, data: MacroDataTransfer, resolve: (data: MacroDataTransfer) => void, reject: (reason?: Error) => void): void {
     const { command_id, variables } = format
     const command = this.__commandHashMap.get(command_id) ?? null
     if (command !== null) {
@@ -123,7 +104,7 @@ export class CodraftRunner {
     }
   }
 
-  private __runCommands(formats: Codraft.MacroCommandSaveFormat[], data: MacroDataTransfer): Promise<void> {
+  protected __runCommands(formats: Codraft.MacroCommandSaveFormat[], data: MacroDataTransfer): Promise<void> {
     // eslint-disable-next-line no-async-promise-executor
     const promise = new Promise<void>(async (resolve, reject) => {
       let isFail = false
@@ -149,14 +130,14 @@ export class CodraftRunner {
     return promise
   }
 
-  private __recursiveBox(box: Codraft.MacroBox, data: MacroDataTransfer): void {
+  protected __recursiveBox(box: Codraft.MacroBox, data: MacroDataTransfer): void {
     const nextBoxes = box.next_box_ids.filter((id) => CodraftRunner.FindBox(this.__boxes, id)).map((id) => CodraftRunner.FindBox(this.__boxes, id)!)
     this.__runCommands(box.conditions, data).then(() => this.__runCommands(box.actions, data)).then(() => {
       nextBoxes.forEach((nextBox) => this.__recursiveBox(nextBox, data))
     })
   }
 
-  private __attachEvent(): void {
+  protected __attachEvent(): void {
     this.__boxes.forEach((box) => {
       box.events.forEach((event) => {
         const runner = (data: MacroDataTransfer) => this.__recursiveBox(box, data)

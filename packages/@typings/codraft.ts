@@ -5,7 +5,7 @@ export declare type VariableItem<T> = {
 }
 export declare type SupportedVariableType = string|number|boolean
 export declare interface RawVariable<T> {
-  type: 'string'|'number'|'boolean'
+  type: 'string'|'number'|'boolean'|'dynamic'
   default_value: T
   items?: VariableItem<T>[]
 }
@@ -21,8 +21,12 @@ export declare interface BooleanVariable extends RawVariable<boolean> {
   type: 'boolean'
   default_value: boolean
 }
+export declare interface DynamicVariable extends RawVariable<SupportedVariableType> {
+  type: 'dynamic'
+  default_value: SupportedVariableType
+}
 
-export declare type MacroVariable = StringVariable|NumberVariable|BooleanVariable
+export declare type MacroVariable = StringVariable|NumberVariable|BooleanVariable|DynamicVariable
 export declare type MacroDataTransfer = { event: any, local: Record<string, any>, global: any }
 export declare type Resolve = (data: MacroDataTransfer) => void
 export declare type Reject = (reason?: Error) => void
@@ -48,7 +52,7 @@ export declare namespace Codraft {
     title: string
     description: string
     variables: {
-      [key: string]: RawVariable<SupportedVariableType>
+      [key: string]: MacroVariable
     },
     fn: Fn
   }

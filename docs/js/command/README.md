@@ -23,7 +23,7 @@
   description: string // 명령어의 설명. 이곳에 사용자가 변수를 대입하여 코딩할 수 있습니다.
   variables: { // description 에서 사용한 변수를 이곳에 선언해야 합니다.
     [key: string]: {
-      type: 'string'|'number'|'boolean', // 입력된 값이 해석될 방식을 지정합니다.
+      type: 'string'|'number'|'boolean'|'dynamic', // 입력된 값이 해석될 방식을 지정합니다.
       default_value: string|number|boolean,
       items?: [ // 이 값을 지정하면 radio 방식으로 주어진 값만을 입력할 수 있습니다.
         preview: string,
@@ -148,6 +148,51 @@ function onReady(e) {
   setActionCommands([actionSample])
 }
 ```
+
+### 명령어 변수의 자료형
+
+`variables[key].type`은 기입한 변수의 자료형을 의미합니다.
+
+기본적으로 지원되는 속성은 `string`, `number`, `boolean`, `dynamic`입니다. `Codraft`에서는 사용자가 입력한 값을 문자열로 저장하며, 이 속성은 해당 포맷을 어떻게 해석할 것인지 지정합니다.
+
+다음은 입력값에 대한 각 속성이 해석한 결과 예시입니다.
+
+#### 사용자가 `1`을 기입했을 경우
+
+|속성|해석결과|
+|---|---|
+|`string`| `"1"`|
+|`number`| `1`|
+|`boolean`| `true`|
+|`dynamic`|`1`|
+
+#### 사용자가 `1+3`을 기입했을 경우
+
+|속성|해석결과|
+|---|---|
+|`string`| `"1+3"`|
+|`number`| `4`|
+|`boolean`| `true`|
+|`dynamic`|`4`|
+
+#### 사용자가 `false`을 기입했을 경우
+
+|속성|해석결과|
+|---|---|
+|`string`| `"false"`|
+|`number`| `error`|
+|`boolean`| `false`|
+|`dynamic`|`false`|
+
+#### 주의사항
+
+##### `number` 자료형에서 `error`가 발생하는 이유
+
+`number` 자료형 변수에 `false`를 기입하면 `0`이 아닌 `error`가 나오는 이유가 궁금하실 수 있습니다. 이는 `Codraft`가 `number` 자료형을 해석하는데 [`math-expression-evaluator`](https://github.com/bugwheels94/math-expression-evaluator) 라이브러리에 의존하기 때문입니다. `number` 자료형은 `math-expression-evaluator`을 통한 수식 계산을 하기 때문에, 수식이 아닌 문자열은 오류로 표기됩니다.
+
+##### `dynamic` 자료형
+
+`dynamic` 자료형은 마법처럼 보일 수 있습니다. 하지만 모든 자료형을 확인하기 때문에 다른 자료형에 비해 성능이 느립니다. `dynamic` 자료형은 `math-expression-evaluator` 라이브러리와 `JSON.parse` 함수를 이용해서 자료형을 파악합니다. 따라서 `array`, `object` 등의 자료형도 파악할 수 있습니다만 권장되지는 않습니다. `dynamic` 자료형은 사용자가 어떤 자료형을 기입할지 모르는 상황에서 사용되어야 합니다.
 
 ### 명령어의 `fn` 함수
 
