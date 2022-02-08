@@ -30,7 +30,7 @@ export default {
       default_value: '변수명'
     },
     'var_value': {
-      type: 'string',
+      type: 'dynamic',
       default_value: '변수값'
     },
     'compare': {

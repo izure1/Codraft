@@ -22,7 +22,7 @@ export default {
       ]
     },
     'message': {
-      type: 'string',
+      type: 'dynamic',
       default_value: 'Hello World'
     }
   },
