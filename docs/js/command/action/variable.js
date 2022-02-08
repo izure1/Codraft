@@ -5,9 +5,9 @@ export default {
   author: 'izure1',
   group: '변수',
   title: '변수에 값을 저장합니다.',
-  description: '{{ var_type }} {{ var_scope }}변수 {{ var_name }}에 {{ var_content }}(이)란 값을 저장합니다.',
+  description: '{{ var_type }} 변수 {{ var_name }}에 {{ var_content }}(이)란 값을 저장합니다.',
   variables: {
-    'var_scope': {
+    'var_type': {
       type: 'string',
       default_value: 'local',
       items: [
