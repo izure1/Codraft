@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title class="grey darken-3 text-body-2 white--text">값을 입력하세요</v-card-title>
+    <v-card-title class="grey darken-3 text-body-2 white--text"><span class="grey--text mx-1">{{ variable.type }}</span>자료형을 입력하세요</v-card-title>
     <v-card-text class="mt-5">
       <v-form v-if="variable">
         <div v-if="variable.items">
