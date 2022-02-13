@@ -4,7 +4,7 @@
   "description": "Codraft parser",
   "main": "dist/umd/index.js",
   "module": "dist/esm/index.js",
-  "types": "types/index.d.ts",
+  "types": "types/core/src/index.d.ts",
   "scripts": {
     "build": "npx webpack build --config ./build/webpack.config.js",
     "serve": "npx webpack serve --config ./build/webpack.config.js",
