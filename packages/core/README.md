@@ -36,7 +36,7 @@ import { Runner } from 'https://cdn.jsdelivr.net/npm/@codraft/core@latest/dist/e
 
 ### 명령어
 
-사용된 모든 명령어가 필요합니다.
+사용된 모든 [명령어](../../docs/js/command/README.md)가 필요합니다.
 
 ### 저장 데이터
 

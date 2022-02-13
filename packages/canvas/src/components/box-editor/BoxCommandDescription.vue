@@ -15,7 +15,7 @@
         />
         <span
           v-else
-          v-text="item.node.textContent"
+          v-html="parseURL(item.node.textContent)"
         />
       </span>
 
@@ -79,6 +79,7 @@ import { Codraft } from '@typings/codraft'
 
 import { computed, defineComponent, onMounted, ref, watch } from '@vue/composition-api'
 
+import { url_regexp } from '@/utils/regexp'
 import { useCommand, useElement, useComponentUtils } from '@/components/common'
 import BoxCommandVariableEditor from './BoxCommandVariableEditor.vue'
 
@@ -117,9 +118,13 @@ export default defineComponent({
 
     const nodes = ref<DescriptionNode[]>([])
 
+    const parseURL = (content: string) => {
+      return content.replace(url_regexp, (matched) => `<a href="${matched}" target="_blank">${matched}</a>`)
+    }
+
     const parseDescriptionHTML = (command: Codraft.MacroCommand, format: Codraft.MacroCommandSaveFormat) => {
       const parser = new DOMParser
-      const text = parseCommandDescription(command, format, 'variable blue--text font-weight-bold')
+      const text = parseCommandDescription(command, format, 'codraft__variable blue--text font-weight-bold')
       const doc = parser.parseFromString(text, 'text/html')
       return Array.from(doc.body.childNodes)
     }
@@ -134,7 +139,7 @@ export default defineComponent({
       const allNodes = parseDescriptionHTML(command, save_format)
       const variableNodes = allNodes.filter(isElement)
       allNodes.forEach((node) => {
-        if (isElement(node)) {
+        if (isElement(node) && node.classList.contains('codraft__variable')) {
           const i = variableNodes.indexOf(node)
           const key = keys[i]
           const item: VariableDescriptionNode = {
@@ -173,6 +178,7 @@ export default defineComponent({
       openInput,
       closeInput,
       save,
+      parseURL,
       ...useComponentUtils()
     }
   }
