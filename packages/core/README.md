@@ -8,6 +8,28 @@
 npm install @codraft/core
 ```
 
+### Node.js
+
+```javascript
+import { Runner } from '@codraft/core'
+```
+
+### Browser (umd)
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@codraft/core@latest/dist/umd/index.min.js"></script>
+```
+
+```javascript
+const { Runner } = Codraft
+```
+
+### Browser (esnext)
+
+```javascript
+import { Runner } from 'https://cdn.jsdelivr.net/npm/@codraft/core@latest/dist/esm/index.min.js'
+```
+
 ## 사용법
 
 `@codraft/core`을 실행하기 위해선 두 가지 정보가 필요합니다.
@@ -26,20 +48,4 @@ import { Runner } from '@codraft/core'
 const runner = new Runner(eventCommands, conditionCommands, actionCommands, saveData)
 
 runner.init() // 코드를 실행합니다.
-```
-
-#### Node.js
-
-```javascript
-import { Runner } from '@codraft/core'
-```
-
-#### Browser
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@codraft/core@latest/dist/core/src/index.min.js"></script>
-```
-
-```javascript
-const { Runner } = Codraft
 ```
