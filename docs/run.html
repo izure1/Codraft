@@ -9,11 +9,10 @@
         margin: 0;
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@codraft/core@1.1.1/dist/core/src/index.min.js"></script>
     <script type="module">
+      import { Runner } from 'https://cdn.jsdelivr.net/npm/@codraft/core@1.1.1/dist/esm/index.min.js'
       import { events, conditions, actions } from './js/commands.js'
 
-      const { Runner } = Codraft
       const rawSaveData = localStorage.getItem('codraft-save')
 
       if (rawSaveData) {
