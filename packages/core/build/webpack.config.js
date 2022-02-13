@@ -1,18 +1,8 @@
 const path = require('path')
 const tsTransformPaths = require('@zerollup/ts-transform-paths')
 
-module.exports = {
+const base = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
-  entry: {
-    index: path.resolve(__dirname, '../', 'src', 'index.ts')
-  },
-  output: {
-    path: path.resolve(__dirname, '../', 'dist', 'core', 'src'),
-    filename: '[name].js',
-    library: 'Codraft',
-    libraryTarget: 'umd',
-    publicPath: '/dist/',
-  },
   module: {
     rules: [
       {
@@ -44,6 +34,22 @@ module.exports = {
       path.resolve(__dirname, '../', 'node_modules'),
       path.resolve(__dirname, '../', '../', '../', 'node_modules')
     ]
+  }
+}
+
+const umd = {
+  ...base,
+  entry: {
+    index: path.resolve(__dirname, '../', 'src', 'index.ts')
+  },
+  output: {
+    path: path.resolve(__dirname, '../', 'dist', 'umd'),
+    filename: '[name].js',
+    library: {
+      type: 'umd',
+      name: 'Codraft'
+    },
+    publicPath: '/dist/',
   },
   devServer: {
     static: {
@@ -52,3 +58,26 @@ module.exports = {
     port: 8081,
   }
 }
+
+const esm = {
+  ...base,
+  experiments: {
+    outputModule: true
+  },
+  entry: {
+    index: path.resolve(__dirname, '../', 'src', 'index.ts')
+  },
+  output: {
+    path: path.resolve(__dirname, '../', 'dist', 'esm'),
+    filename: '[name].js',
+    library: {
+      type: 'module'
+    },
+    publicPath: '/dist/',
+  }
+}
+
+module.exports = [
+  umd,
+  esm
+]

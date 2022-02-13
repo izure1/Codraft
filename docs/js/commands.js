@@ -21,15 +21,17 @@ export const events = [
 ]
 
 import condition_checkEnvironment from './command/condition/check-environment.js'
+import condition_checkKeyCode from './command/condition/check-key-code.js'
 import condition_checkMouseWhich from './command/condition/check-mouse-which.js'
 import condition_checkProtocol from './command/condition/check-protocol.js'
 import condition_variable from './command/condition/variable.js'
 
 export const conditions = [
   condition_checkEnvironment,
+  condition_checkKeyCode,
   condition_checkMouseWhich,
   condition_checkProtocol,
-  condition_variable
+  condition_variable,
 ]
 
 import action_alert from './command/action/alert.js'
