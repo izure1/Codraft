@@ -25,6 +25,14 @@
             />
           </div>
           <div v-else-if="variable.type === 'number'">
+            <v-btn
+              href="https://github.com/bugwheels94/math-expression-evaluator#supported-symbols"
+              target="_blank"
+              width="100%"
+              class="text-center text-caption mb-2 elevation-0"
+            >
+              사용할 수 있는 수식 목록
+            </v-btn>
             <v-text-field
               v-model="returnData"
               type="text"
