@@ -39,6 +39,7 @@ import action_confirm from './command/action/confirm.js'
 import action_consolelog from './command/action/consolelog.js'
 import action_deleteVariable from './command/action/delete-variable.js'
 import action_DOMAttribute from './command/action/DOM-attribute.js'
+import action_fetch from './command/action/fetch.js'
 import action_locationReplace from './command/action/location-replace.js'
 import action_mousePosition from './command/action/mouse-position.js'
 import action_prompt from './command/action/prompt.js'
@@ -52,6 +53,7 @@ export const actions = [
   action_consolelog,
   action_deleteVariable,
   action_DOMAttribute,
+  action_fetch,
   action_locationReplace,
   action_mousePosition,
   action_prompt,
