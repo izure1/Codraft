@@ -1,4 +1,4 @@
-import axios from 'https://cdn.jsdelivr.net/npm/axios@0.26.0/dist/axios.min.js'
+import axios from 'https://cdn.jsdelivr.net/npm/axios-esm@1.0.0/index.min.js'
 
 export default {
   id: '461f8e8e-0dbc-4bbd-bb6a-62635d5cf646',
