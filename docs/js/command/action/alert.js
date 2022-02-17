@@ -4,7 +4,7 @@ export default {
   url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '대화상자',
-  title: '대화상자를 띄웁니다.',
+  title: '대화상자를 띄웁니다',
   description: '대화상자에 내용{{ message }}(를)을 보여줍니다. 이 명령어는 브라우저에서만 작동합니다.',
   variables: {
     'message': {

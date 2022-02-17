@@ -4,7 +4,7 @@ export default {
   url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '변수',
-  title: '변수에 값을 저장합니다.',
+  title: '변수에 값을 저장합니다',
   description: '{{ var_type }} 변수 {{ var_name }}에 {{ var_content }}(이)란 값을 저장합니다.',
   variables: {
     'var_type': {

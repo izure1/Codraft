@@ -4,7 +4,7 @@ export default {
   url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '마우스',
-  title: '마우스 버튼을 비교합니다.',
+  title: '마우스 버튼을 비교합니다',
   description: '마우스 이벤트 대상이 {{ which }}버튼일 경우 작동합니다. 이 명령어는 브라우저에서만 작동합니다.',
   variables: {
     'which': {

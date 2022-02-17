@@ -4,7 +4,7 @@ export default {
   url: 'https://github.com/izure1/Codraft',
   author: 'izure1',
   group: '변수',
-  title: '변수를 삭제합니다.',
+  title: '변수를 삭제합니다',
   description: '{{ var_type }}변수 {{ var_name }}(를)을 삭제합니다.',
   variables: {
     'var_type': {
