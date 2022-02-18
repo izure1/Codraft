@@ -17,7 +17,7 @@ export class CodraftSolver {
     return equation === true
   }
 
-  static SolveDynamic(v: string): SupportedVariableType {
+  static SolveDynamic(v: string): any {
     let result
     try {
       // check number type
@@ -47,7 +47,7 @@ export class CodraftSolver {
     return null
   }
 
-  static GetVariableSolver(type: ReturnType<typeof CodraftSolver.GetVariableType>): ((v: string) => SupportedVariableType)|null {
+  static GetVariableSolver(type: ReturnType<typeof CodraftSolver.GetVariableType>): ((v: string) => any)|null {
     if (type === null) {
       return null
     }

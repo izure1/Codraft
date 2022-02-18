@@ -16,15 +16,15 @@ export class CodraftRunner {
     return map
   }
 
-  protected static ParseVariables(command: Codraft.MacroCommand, variables: Record<string, string>, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): Record<string, SupportedVariableType> {
-    const clone: Record<string, SupportedVariableType> = {}
+  protected static ParseVariables(command: Codraft.MacroCommand, variables: Record<string, string>, local: Record<string, any>, global: Record<string, any>): Record<string, any> {
+    const clone: Record<string, any> = {}
     for (const key in variables) {
       clone[key] = CodraftRunner.ParseVariable(command, variables, key, local, global)
     }
     return clone
   }
 
-  protected static ParseVariable(command: Codraft.MacroCommand, variables: Record<string, string>, key: string, local: Record<string, SupportedVariableType>, global: Record<string, SupportedVariableType>): SupportedVariableType {
+  protected static ParseVariable(command: Codraft.MacroCommand, variables: Record<string, string>, key: string, local: Record<string, any>, global: Record<string, any>): any {
     const local_regexp = /{{2}\s*(.*?)\s*}{2}/gmi
     const global_regexp = /{{3}\s*(.*?)\s*}{3}/gmi
 
@@ -106,35 +106,34 @@ export class CodraftRunner {
 
   protected __runCommands(formats: Codraft.MacroCommandSaveFormat[], data: MacroDataTransfer): Promise<void> {
     // eslint-disable-next-line no-async-promise-executor
-    const promise = new Promise<void>(async (resolve, reject) => {
-      let isFail = false
+    return new Promise(async (resolve, reject) => {
       for (const format of formats) {
-        if (isFail) return
-        else {
-          await new Promise((next, stop) => this.__runCommand(format, data).then(next).catch(stop)).catch((reason) => {
-            isFail = true
-            const debugData = { format, data, reason }
-            reject(debugData)
-          })
+        try {
+          await this.__runCommand(format, data)
+        } catch (reason) {
+          const debugging = { format, data, reason }
+          reject(debugging)
+          return
         }
       }
       resolve()
     })
-
-    promise.catch((debugData) => {
-      if (this.__isDebug) {
-        console.error(debugData)
-      }
-    })
-
-    return promise
   }
 
-  protected __recursiveBox(box: Codraft.MacroBox, data: MacroDataTransfer): void {
-    const nextBoxes = box.next_box_ids.filter((id) => CodraftRunner.FindBox(this.__boxes, id)).map((id) => CodraftRunner.FindBox(this.__boxes, id)!)
-    this.__runCommands(box.conditions, data).then(() => this.__runCommands(box.actions, data)).then(() => {
+  protected async __recursiveBox(box: Codraft.MacroBox, data: MacroDataTransfer): Promise<void> {
+    const nextBoxes = box.next_box_ids
+      .filter((id) => CodraftRunner.FindBox(this.__boxes, id))
+      .map((id) => CodraftRunner.FindBox(this.__boxes, id)!)
+
+    try {
+      await this.__runCommands(box.conditions, data)
+      await this.__runCommands(box.actions, data)
       nextBoxes.forEach((nextBox) => this.__recursiveBox(nextBox, data))
-    })
+    } catch (debugging) {
+      if (this.__isDebug) {
+        console.error(debugging)
+      }
+    }
   }
 
   protected __attachEvent(): void {
@@ -142,7 +141,8 @@ export class CodraftRunner {
       box.events.forEach((event) => {
         const runner = (data: MacroDataTransfer) => this.__recursiveBox(box, data)
         const catcher = (reason?: Error) => console.error(reason)
-        this.__runCommandAsync(event, { event: null, local: {}, global: globalThis }, runner, catcher)
+        const stream = { event: null, local: {}, global: globalThis }
+        this.__runCommandAsync(event, stream, runner, catcher)
       })
     })
   }

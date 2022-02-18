@@ -1,10 +1,10 @@
 {
   "name": "@codraft/core",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Codraft parser",
   "main": "dist/umd/index.js",
   "module": "dist/esm/index.js",
-  "types": "types/core/src/index.d.ts",
+  "typings": "types/core/src/index.d.ts",
   "scripts": {
     "build": "npx webpack build --config ./build/webpack.config.js",
     "serve": "npx webpack serve --config ./build/webpack.config.js",

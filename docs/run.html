@@ -8,18 +8,57 @@
         padding: 0;
         margin: 0;
       }
+
+      .navigator {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(0, 0, 0, 0.8);
+        border-radius: 7px;
+        padding: 10px 20px;
+      }
+
+      .navigator > a {
+        font-size: 15pt;
+        font-weight: bold;
+        color: white;
+        display: inline-block;
+        vertical-align: top;
+        zoom: 1;
+        text-decoration: none;
+      }
     </style>
+    <script>
+      let debugging = false
+      let runner = null
+
+      function attachDebuggingEvent() {
+        document.querySelector('.navigator > a').addEventListener('click', (e) => {
+          e.preventDefault()
+          setDebuggingMode(!debugging)
+        })
+      }
+
+      function setDebuggingMode(active) {
+        document.querySelector('.navigator > a').textContent = `디버깅: ${active}`
+        debugging = active
+        if (runner) {
+          runner.setDebugMode(active)
+        }
+      }
+
+      window.addEventListener('load', attachDebuggingEvent)
+    </script>
     <script type="module">
       import { Runner } from 'https://cdn.jsdelivr.net/npm/@codraft/core@1.1.1/dist/esm/index.min.js'
       import { events, conditions, actions } from './js/commands.js'
 
       const rawSaveData = localStorage.getItem('codraft-save')
-
       if (rawSaveData) {
         try {
           const isDebugMode = true
           const saveData = JSON.parse(rawSaveData)
-          const runner = new Runner(events, conditions, actions, saveData, isDebugMode)
+          runner = new Runner(events, conditions, actions, saveData, isDebugMode)
           runner.init()
         } catch (reason) {
           alert(reason)
@@ -27,5 +66,9 @@
       }
     </script>
   </head>
-  <body></body>
+  <body>
+    <nav class="navigator">
+      <a href="./run.html">디버깅: false</a>
+    </nav>
+  </body>
 </html>
