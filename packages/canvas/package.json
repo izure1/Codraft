@@ -1,6 +1,6 @@
 {
   "name": "@codraft/canvas",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "dist/codraft-canvas.min.js",
   "types": "types/index.d.ts",
   "description": "Codraft canvas web component",
@@ -14,6 +14,7 @@
     "@jsplumb/connector-flowchart": "^5.3.4",
     "@vue/composition-api": "^1.4.3",
     "core-js": "^3.6.5",
+    "delay-call": "^1.1.0",
     "vue": "^2.6.11",
     "vue-dragscroll": "^3.0.1",
     "vuetify": "^2.4.0",
